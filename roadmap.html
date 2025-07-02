@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedhaAi - Build Roadmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full bg-white shadow z-50 flex justify-between items-center px-6 py-4">
+    <h1 class="text-2xl font-extrabold text-purple-700">MedhaAi</h1>
+    <nav class="hidden md:flex space-x-6">
+      <a href="index.html" class="text-gray-700 hover:text-purple-600">Home</a>
+      <a href="roadmap.html" class="text-purple-700 font-semibold">Roadmap</a>
+      <a href="core.html" class="text-gray-700 hover:text-purple-600">Core Idea</a>
+      <a href="#contact" class="text-gray-700 hover:text-purple-600">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="pt-32 pb-16 px-4 flex flex-col items-center text-center">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Generate Your Roadmap</h2>
+    <p class="text-lg md:text-xl max-w-xl text-gray-600 mb-8">Choose one way: upload, type notes, or use AI Magic to build your personalized path.</p>
+
+    <!-- Tabs -->
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-md p-6">
+      <div class="flex border-b mb-4">
+        <button id="tab-upload" class="flex-1 py-2 border-b-2 border-purple-600 font-bold text-purple-700">Upload</button>
+        <button id="tab-notes" class="flex-1 py-2 text-gray-600 hover:text-purple-600">From Notes</button>
+        <button id="tab-ai" class="flex-1 py-2 text-gray-600 hover:text-purple-600">AI Magic</button>
+      </div>
+
+      <!-- Upload Input -->
+      <div id="content-upload">
+        <label class="block mb-2 text-left font-semibold">Upload your document</label>
+        <input type="file" class="w-full border border-gray-300 rounded-lg px-4 py-3" />
+      </div>
+
+      <!-- From Notes Input -->
+      <div id="content-notes" class="hidden">
+        <label class="block mb-2 text-left font-semibold">Type or paste your notes</label>
+        <textarea rows="6" placeholder="Your notes here..." class="w-full border border-gray-300 rounded-lg px-4 py-3"></textarea>
+      </div>
+
+      <!-- AI Magic Input -->
+      <div id="content-ai" class="hidden">
+        <label class="block mb-2 text-left font-semibold">Describe your idea</label>
+        <input type="text" placeholder="E.g. Learn Python for Data Science"
+          class="w-full border border-gray-300 rounded-lg px-4 py-3" />
+      </div>
+
+      <!-- Action -->
+      <button class="w-full mt-6 bg-purple-600 text-white font-bold py-3 rounded-full hover:bg-purple-700 transition">
+        Generate My Path
+      </button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-purple-800 text-white text-center py-6 mt-20">
+    <p>&copy; 2025 MedhaAi. All rights reserved.</p>
+  </footer>
+
+  <!-- Tab Script -->
+  <script>
+    const tabUpload = document.getElementById('tab-upload');
+    const tabNotes = document.getElementById('tab-notes');
+    const tabAI = document.getElementById('tab-ai');
+    const contentUpload = document.getElementById('content-upload');
+    const contentNotes = document.getElementById('content-notes');
+    const contentAI = document.getElementById('content-ai');
+
+    tabUpload.onclick = () => {
+      tabUpload.classList.add('border-purple-600', 'text-purple-700', 'font-bold');
+      tabNotes.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
+      tabAI.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
+      contentUpload.classList.remove('hidden');
+      contentNotes.classList.add('hidden');
+      contentAI.classList.add('hidden');
+    };
+
+    tabNotes.onclick = () => {
+      tabNotes.classList.add('border-purple-600', 'text-purple-700', 'font-bold');
+      tabUpload.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
+      tabAI.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
+      contentUpload.classList.add('hidden');
+      contentNotes.classList.remove('hidden');
+      contentAI.classList.add('hidden');
+    };
+
+    tabAI.onclick = () => {
+      tabAI.classList.add('border-purple-600', 'text-purple-700', 'font-bold');
+      tabUpload.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
+      tabNotes.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
+      contentUpload.classList.add('hidden');
+      contentNotes.classList.add('hidden');
+      contentAI.classList.remove('hidden');
+    };
+  </script>
+
+</body>
+</html>
