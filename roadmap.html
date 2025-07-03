@@ -3,58 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedhaAi - Build Roadmap</title>
+  <title>MedhaAi - Build Your Roadmap</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    .active-tab {
+      border-bottom-width: 3px;
+      border-color: #7e22ce; /* purple-700 */
+      color: #7e22ce;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(126, 34, 206, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn {
+      transition: all 0.3s ease;
+    }
+
+    .tab-content {
+      transition: opacity 0.4s ease;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gradient-to-r from-purple-50 to-purple-100 text-gray-800">
 
-  <!-- Header -->
-  <header class="fixed top-0 left-0 w-full bg-white shadow z-50 flex justify-between items-center px-6 py-4">
-    <h1 class="text-2xl font-extrabold text-purple-700">MedhaAi</h1>
-    <nav class="hidden md:flex space-x-6">
-      <a href="index.html" class="text-gray-700 hover:text-purple-600">Home</a>
-      <a href="roadmap.html" class="text-purple-700 font-semibold">Roadmap</a>
-      <a href="core.html" class="text-gray-700 hover:text-purple-600">Core Idea</a>
-      <a href="#contact" class="text-gray-700 hover:text-purple-600">Contact</a>
-    </nav>
-  </header>
+ <!-- Header -->
+    <header class="fixed top-0 left-0 w-full bg-white shadow z-50 flex justify-between items-center px-6 py-4">
+  <h1 class="text-2xl font-extrabold text-purple-700">MedhaAi</h1>
 
-  <!-- Main -->
+  <!-- Desktop Nav -->
+  <nav class="hidden md:flex space-x-6">
+    <a href="#about" class="text-gray-700 hover:text-purple-600">About</a>
+    <a href="roadmap.html" class="text-gray-700 hover:text-purple-600">Roadmap</a>
+    <a href="chatbot.html" class="text-gray-700 hover:text-purple-600">Chatbot</a>
+    <a href="#join" class="text-gray-700 hover:text-purple-600">Join Us</a>
+  </nav>
+
+  <!-- Mobile Nav Toggle -->
+  <button id="menu-toggle" class="md:hidden text-purple-700 focus:outline-none">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden absolute top-full right-0 bg-white shadow-md w-full flex flex-col space-y-4 px-6 py-4 md:hidden">
+    <a href="#about" class="text-gray-700 hover:text-purple-600">About</a>
+    <a href="roadmap.html" class="text-gray-700 hover:text-purple-600">Roadmap</a>
+    <a href="chatbot.html" class="text-gray-700 hover:text-purple-600">Chatbot</a>
+    <a href="#join" class="text-gray-700 hover:text-purple-600">Join Us</a>
+  </div>
+</header>
+
+  <!-- Hero -->
   <main class="pt-32 pb-16 px-4 flex flex-col items-center text-center">
-    <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Generate Your Roadmap</h2>
-    <p class="text-lg md:text-xl max-w-xl text-gray-600 mb-8">Choose one way: upload, type notes, or use AI Magic to build your personalized path.</p>
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Build Your Personalized Roadmap</h2>
+    <p class="text-lg md:text-xl max-w-xl text-gray-600 mb-8">Choose <span class="font-bold">one</span> option: Upload a document, type your notes, or let AI Magic craft it for you.</p>
 
-    <!-- Tabs -->
-    <div class="bg-white w-full max-w-lg rounded-2xl shadow-md p-6">
+    <!-- Tabs + Content -->
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 border border-purple-100 relative">
+
+      <!-- Tabs -->
       <div class="flex border-b mb-4">
-        <button id="tab-upload" class="flex-1 py-2 border-b-2 border-purple-600 font-bold text-purple-700">Upload</button>
-        <button id="tab-notes" class="flex-1 py-2 text-gray-600 hover:text-purple-600">From Notes</button>
-        <button id="tab-ai" class="flex-1 py-2 text-gray-600 hover:text-purple-600">AI Magic</button>
+        <button id="tab-upload" class="tab-btn flex-1 py-2 active-tab rounded-t-lg">Upload</button>
+        <button id="tab-notes" class="tab-btn flex-1 py-2 text-gray-600 hover:text-purple-700 rounded-t-lg">From Notes</button>
+        <button id="tab-ai" class="tab-btn flex-1 py-2 text-gray-600 hover:text-purple-700 rounded-t-lg">AI Magic ✨</button>
       </div>
 
-      <!-- Upload Input -->
-      <div id="content-upload">
-        <label class="block mb-2 text-left font-semibold">Upload your document</label>
-        <input type="file" class="w-full border border-gray-300 rounded-lg px-4 py-3" />
+      <!-- All Inputs (in same relative container) -->
+      <div class="relative min-h-[200px]">
+        <!-- Upload -->
+        <div id="content-upload" class="tab-content">
+          <label class="block mb-2 text-left font-semibold">Upload your document</label>
+          <input type="file" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-purple-500" />
+        </div>
+
+        <!-- Notes -->
+        <div id="content-notes" class="tab-content hidden">
+          <label class="block mb-2 text-left font-semibold">Type or paste your notes</label>
+          <textarea rows="6" placeholder="Your notes here..."
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-purple-500"></textarea>
+        </div>
+
+        <!-- AI Magic -->
+        <div id="content-ai" class="tab-content hidden">
+          <label class="block mb-2 text-left font-semibold">Describe your idea</label>
+          <input type="text" placeholder="E.g. Build a Data Science Path"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-purple-500" />
+          <div id="magic-effect" class="mt-4 hidden">
+            <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_touohxv0.json"
+              background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></lottie-player>
+            <p class="text-purple-700 font-semibold mt-2">✨ AI Magic is ON! ✨</p>
+          </div>
+        </div>
       </div>
 
-      <!-- From Notes Input -->
-      <div id="content-notes" class="hidden">
-        <label class="block mb-2 text-left font-semibold">Type or paste your notes</label>
-        <textarea rows="6" placeholder="Your notes here..." class="w-full border border-gray-300 rounded-lg px-4 py-3"></textarea>
-      </div>
+      <!-- CTA -->
+      <button
+        class="w-full mt-10 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 px-6 rounded-full shadow hover:shadow-xl transition-all hover:scale-105">Generate My Path</button>
 
-      <!-- AI Magic Input -->
-      <div id="content-ai" class="hidden">
-        <label class="block mb-2 text-left font-semibold">Describe your idea</label>
-        <input type="text" placeholder="E.g. Learn Python for Data Science"
-          class="w-full border border-gray-300 rounded-lg px-4 py-3" />
-      </div>
-
-      <!-- Action -->
-      <button class="w-full mt-6 bg-purple-600 text-white font-bold py-3 rounded-full hover:bg-purple-700 transition">
-        Generate My Path
-      </button>
     </div>
   </main>
 
@@ -63,41 +112,52 @@
     <p>&copy; 2025 MedhaAi. All rights reserved.</p>
   </footer>
 
-  <!-- Tab Script -->
+  <!-- Tab Logic -->
   <script>
-    const tabUpload = document.getElementById('tab-upload');
-    const tabNotes = document.getElementById('tab-notes');
-    const tabAI = document.getElementById('tab-ai');
-    const contentUpload = document.getElementById('content-upload');
-    const contentNotes = document.getElementById('content-notes');
-    const contentAI = document.getElementById('content-ai');
-
-    tabUpload.onclick = () => {
-      tabUpload.classList.add('border-purple-600', 'text-purple-700', 'font-bold');
-      tabNotes.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
-      tabAI.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
-      contentUpload.classList.remove('hidden');
-      contentNotes.classList.add('hidden');
-      contentAI.classList.add('hidden');
+    const tabs = {
+      upload: document.getElementById('tab-upload'),
+      notes: document.getElementById('tab-notes'),
+      ai: document.getElementById('tab-ai'),
     };
-
-    tabNotes.onclick = () => {
-      tabNotes.classList.add('border-purple-600', 'text-purple-700', 'font-bold');
-      tabUpload.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
-      tabAI.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
-      contentUpload.classList.add('hidden');
-      contentNotes.classList.remove('hidden');
-      contentAI.classList.add('hidden');
+    const blocks = {
+      upload: document.getElementById('content-upload'),
+      notes: document.getElementById('content-notes'),
+      ai: document.getElementById('content-ai'),
     };
+    const magicEffect = document.getElementById('magic-effect');
 
-    tabAI.onclick = () => {
-      tabAI.classList.add('border-purple-600', 'text-purple-700', 'font-bold');
-      tabUpload.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
-      tabNotes.classList.remove('border-purple-600', 'text-purple-700', 'font-bold');
-      contentUpload.classList.add('hidden');
-      contentNotes.classList.add('hidden');
-      contentAI.classList.remove('hidden');
-    };
+    function activateTab(tabName) {
+      // Reset tabs
+      Object.values(tabs).forEach(btn => {
+        btn.classList.remove('active-tab');
+        btn.classList.add('text-gray-600');
+      });
+
+      // Hide all
+      Object.values(blocks).forEach(block => {
+        block.classList.add('hidden');
+      });
+
+      // Show chosen
+      tabs[tabName].classList.add('active-tab');
+      blocks[tabName].classList.remove('hidden');
+
+      if (tabName === 'ai') {
+        magicEffect.classList.remove('hidden');
+      } else {
+        magicEffect.classList.add('hidden');
+      }
+    }
+
+    tabs.upload.onclick = () => activateTab('upload');
+    tabs.notes.onclick = () => activateTab('notes');
+    tabs.ai.onclick = () => activateTab('ai');
+    const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
   </script>
 
 </body>
