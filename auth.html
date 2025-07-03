@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedhaAi - Super Auth Flip</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #f3e8ff, #e9d5ff);
+      overflow: hidden;
+    }
+
+    .flip-container {
+      perspective: 1200px;
+    }
+
+    .flip-card {
+      width: 100%;
+      min-height: 480px;
+      position: relative;
+      transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transform-style: preserve-3d;
+    }
+
+    .flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-side {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .front, .back {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .front {
+      background: #fff;
+    }
+
+    .back {
+      background: linear-gradient(135deg, #7e22ce, #a855f7);
+      color: #fff;
+      transform: rotateY(180deg);
+    }
+
+    .spark-border {
+      position: relative;
+    }
+
+    .spark-border::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 1rem;
+      padding: 3px;
+      background: conic-gradient(from 0deg, #a855f7, #ec4899, #a855f7);
+      animation: spin 5s linear infinite;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: destination-out;
+      z-index: -1;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Add backdrop blurred gradient shapes */
+    .bg-shape {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(120px);
+      opacity: 0.3;
+      z-index: 0;
+    }
+  </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen px-4 relative">
+
+  <!-- Backdrop glowing shapes -->
+  <div class="bg-shape w-72 h-72 bg-purple-400 top-0 left-0"></div>
+  <div class="bg-shape w-56 h-56 bg-pink-400 bottom-0 right-0"></div>
+
+  <!-- Flip Container -->
+  <div class="flip-container w-full max-w-3xl spark-border">
+    <div id="flip-card" class="flip-card">
+
+      <!-- FRONT: LOGIN -->
+      <div class="card-side front">
+        <h2 class="text-4xl font-extrabold text-purple-700 mb-6">Welcome Back</h2>
+        <input id="login-email" type="email" placeholder="Email"
+          class="w-full mb-3 p-3 border rounded focus:outline-purple-500">
+        <input id="login-pass" type="password" placeholder="Password"
+          class="w-full mb-3 p-3 border rounded focus:outline-purple-500">
+        <button onclick="doLogin()"
+          class="w-full bg-purple-600 text-white py-3 rounded hover:bg-purple-700 transition mb-2 shadow">Login</button>
+
+        <button id="google-btn" onclick="googleSignIn()"
+          class="w-full bg-white border border-gray-300 py-3 rounded hover:shadow flex items-center justify-center space-x-2 shadow">
+          <img src="res/google.png" class="w-5 h-5" alt="Google">
+          <span>Sign In with Google</span>
+        </button>
+
+        <p id="login-status" class="mt-4 text-center font-semibold text-sm"></p>
+
+        <p class="mt-6 text-sm">Don’t have an account? 
+          <button onclick="flipCard()" class="text-purple-600 font-bold underline">Sign Up</button>
+        </p>
+      </div>
+
+      <!-- BACK: SIGN UP -->
+      <div class="card-side back">
+        <h2 class="text-4xl font-extrabold mb-6">Create Account</h2>
+        <input id="signup-email" type="email" placeholder="Email"
+          class="w-full mb-3 p-3 border rounded text-black focus:outline-purple-500">
+        <input id="signup-pass" type="password" placeholder="Password"
+          class="w-full mb-3 p-3 border rounded text-black focus:outline-purple-500">
+        <button onclick="doSignUp()"
+          class="w-full bg-white text-purple-700 py-3 rounded hover:bg-gray-200 transition mb-2 shadow">Sign Up</button>
+
+        <p id="signup-status" class="mt-4 text-center font-semibold text-sm"></p>
+
+        <p class="mt-6 text-sm">Already have an account? 
+          <button onclick="flipCard()" class="text-white font-bold underline">Login</button>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Firebase + Flip -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBICMqGlBS-hb6kOFclxE5hsS_8okUMWv8",
+      authDomain: "medhaai-b3434.firebaseapp.com",
+      projectId: "medhaai-b3434",
+      storageBucket: "medhaai-b3434.appspot.com",
+      messagingSenderId: "117672006796",
+      appId: "1:117672006796:web:a5138c27f9d6192a2797a9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    const flipCardEl = document.getElementById('flip-card');
+
+    window.flipCard = () => {
+      flipCardEl.classList.toggle('flipped');
+    };
+
+    window.doLogin = async () => {
+      const email = document.getElementById("login-email").value;
+      const pass = document.getElementById("login-pass").value;
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, pass);
+        document.getElementById("login-status").innerText = `✅ Logged in: ${cred.user.email}`;
+        window.location.href = "roadmap.html";
+      } catch (err) {
+        document.getElementById("login-status").innerText = `❌ ${err.message}`;
+      }
+    };
+
+    window.doSignUp = async () => {
+      const email = document.getElementById("signup-email").value;
+      const pass = document.getElementById("signup-pass").value;
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        document.getElementById("signup-status").innerText = `✅ Signed up: ${cred.user.email}`;
+        window.location.href = "roadmap.html";
+      } catch (err) {
+        document.getElementById("signup-status").innerText = `❌ ${err.message}`;
+      }
+    };
+
+    window.googleSignIn = async () => {
+      try {
+        await signInWithPopup(auth, provider);
+        window.location.href = "roadmap.html";
+      } catch (err) {
+        console.error(err);
+        document.getElementById("login-status").innerText = `❌ ${err.message}`;
+      }
+    };
+  </script>
+</body>
+</html>
