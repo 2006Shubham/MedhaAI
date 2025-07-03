@@ -179,7 +179,7 @@
       try {
         const cred = await signInWithEmailAndPassword(auth, email, pass);
         document.getElementById("login-status").innerText = `✅ Logged in: ${cred.user.email}`;
-        window.location.href = "roadmap.html";
+        window.location.href = "index.html";
       } catch (err) {
         document.getElementById("login-status").innerText = `❌ ${err.message}`;
       }
@@ -191,7 +191,7 @@
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         document.getElementById("signup-status").innerText = `✅ Signed up: ${cred.user.email}`;
-        window.location.href = "roadmap.html";
+        window.location.href = "index.html";
       } catch (err) {
         document.getElementById("signup-status").innerText = `❌ ${err.message}`;
       }
@@ -200,7 +200,7 @@
     window.googleSignIn = async () => {
       try {
         await signInWithPopup(auth, provider);
-        window.location.href = "roadmap.html";
+        window.location.href = "index.html";
       } catch (err) {
         console.error(err);
         document.getElementById("login-status").innerText = `❌ ${err.message}`;
