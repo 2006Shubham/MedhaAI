@@ -69,6 +69,7 @@
     "multer": "^2.0.1",
     "negotiator": "^1.0.0",
     "node-ensure": "^0.0.0",
+    "node-fetch": "^2.7.0",
     "object-assign": "^4.1.1",
     "object-inspect": "^1.13.4",
     "on-finished": "^2.4.1",
