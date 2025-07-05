@@ -1,0 +1,149 @@
+/* (Same CSS as before) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+}
+
+h1, h2, h3 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+input[type="file"] {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: calc(100% - 40px);
+    max-width: 400px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#loadingMessage, #errorMessage {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+#loadingMessage {
+    background-color: #e9f5ff;
+    color: #007bff;
+}
+
+#errorMessage {
+    background-color: #ffe0e0;
+    color: #cc0000;
+}
+
+#quizContainer {
+    margin-top: 30px;
+    text-align: left;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.mcq-item {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.mcq-item p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.mcq-item ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mcq-item ul li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.mcq-item ul li input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.mcq-item ul li label {
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+/* Highlighting for correct/incorrect answers */
+.mcq-item ul li.correct {
+    background-color: #e6ffe6;
+    border: 1px solid #4CAF50;
+    font-weight: bold;
+}
+
+.mcq-item ul li.incorrect {
+    background-color: #ffe6e6;
+    border: 1px solid #f44336;
+    font-weight: bold;
+}
+
+#scoreDisplay {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e0f2f7;
+    border: 1px solid #b3e5fc;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #01579b;
+}
+
+#scoreDisplay h3 {
+    margin-top: 0;
+    color: #01579b;
+}
