@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedhaAI - Interactive Learning</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #ecfdf5, #d1fae5);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <!-- ✅ Premium Header -->
+  <header class="fixed top-0 left-0 w-full bg-white shadow z-50 flex justify-between items-center px-6 py-4">
+    <h1 class="text-2xl font-extrabold text-emerald-700">MedhaAi</h1>
+    <nav class="hidden md:flex space-x-6">
+      <a href="index.html" class="text-gray-700 hover:text-emerald-600">Home</a>
+      <a href="roadmap.html" class="text-gray-700 hover:text-emerald-600">Roadmap</a>
+      <a href="chatbot.html" class="text-gray-700 hover:text-emerald-600">Chatbot</a>
+      <a href="quiz.html" class="text-gray-700 hover:text-emerald-600">Interactive Learning</a>
+      <a href="#join" class="text-gray-700 hover:text-emerald-600">Join Us</a>
+    </nav>
+  </header>
+
+  <!-- ✅ Main Content -->
+  <main class="pt-32 flex-grow p-8">
+
+    <!-- Hero -->
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-extrabold text-indigo-800 mb-2">🎯 MedhaAI Interactive Learning</h1>
+      <p class="text-gray-700">Generate smart MCQs, pick difficulty & test yourself in style!</p>
+    </header>
+
+    <!-- Step 1: Input Options -->
+    <section class="bg-white rounded-xl shadow p-6 mb-6 max-w-3xl mx-auto">
+      <h2 class="text-xl font-bold mb-4 text-emerald-700">📝 Provide Input</h2>
+      <textarea id="userInput" rows="5" placeholder="Paste your document or text here..."
+        class="w-full border border-gray-300 p-3 rounded mb-4"></textarea>
+      <!--input id="aiPrompt" type="text" placeholder="Or type AI prompt here..."
+        class="w-full border border-gray-300 p-3 rounded mb-4"--->
+
+      <div class="flex flex-wrap gap-4 items-center">
+        <label class="font-semibold text-gray-700">MCQs:
+          <input id="mcqCount" type="number" min="1" max="50" value="5"
+            class="w-20 border border-gray-300 p-2 rounded ml-2">
+        </label>
+        <label class="font-semibold text-gray-700">Level:
+          <select id="level" class="border border-gray-300 p-2 rounded ml-2">
+            <option>Default</option>
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+            <option>Pro</option>
+          </select>
+        </label>
+        <button onclick="startQuiz()"
+          class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition shadow">
+          Start Quiz
+        </button>
+      </div>
+    </section>
+
+    <!-- Quiz Status -->
+    <section id="quizStatus" class="hidden mb-4 text-center text-gray-700">
+      <p>Question <span id="currentQ">0</span> of <span id="totalQ">0</span> | Score: <span id="score">0</span></p>
+    </section>
+
+    <!-- MCQ Display -->
+    <section id="quizBox" class="bg-white rounded-xl shadow p-6 hidden max-w-3xl mx-auto">
+      <h2 id="questionText" class="text-xl font-bold mb-4 text-indigo-800"></h2>
+      <div id="optionsBox" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- Final Score -->
+    <section id="resultBox" class="bg-white rounded-xl shadow p-6 hidden text-center max-w-3xl mx-auto">
+      <h2 class="text-2xl font-extrabold mb-4 text-emerald-700">🎉 Quiz Completed!</h2>
+      <p class="text-xl text-gray-800">Your Score: <span id="finalScore"></span></p>
+    </section>
+
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer class="bg-emerald-800 text-white text-center py-6">
+    <p>&copy; 2025 MedhaAi. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let quizData = [];
+    let currentIndex = 0;
+    let score = 0;
+
+    function startQuiz() {
+      const mcqCount = parseInt(document.getElementById('mcqCount').value);
+      const level = document.getElementById('level').value;
+
+      // Dummy data for testing
+      quizData = [];
+      for (let i = 1; i <= mcqCount; i++) {
+        quizData.push({
+          question: `Sample Question ${i} (${level} Level)`,
+          options: [
+            { text: "Option A", correct: i % 4 === 0 },
+            { text: "Option B", correct: i % 4 === 1 },
+            { text: "Option C", correct: i % 4 === 2 },
+            { text: "Option D", correct: i % 4 === 3 },
+          ]
+        });
+      }
+
+      document.getElementById('totalQ').innerText = mcqCount;
+      document.getElementById('score').innerText = 0;
+      document.getElementById('quizStatus').classList.remove('hidden');
+      document.getElementById('quizBox').classList.remove('hidden');
+      document.getElementById('resultBox').classList.add('hidden');
+
+      currentIndex = 0;
+      score = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizData[currentIndex];
+      document.getElementById('currentQ').innerText = currentIndex + 1;
+      document.getElementById('questionText').innerText = q.question;
+      const box = document.getElementById('optionsBox');
+      box.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.innerText = opt.text;
+        btn.className = "border border-gray-300 p-3 rounded hover:bg-emerald-50 text-left transition";
+        btn.onclick = () => checkAnswer(opt.correct, btn);
+        box.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(isCorrect, btn) {
+      if (isCorrect) {
+        btn.classList.add('bg-emerald-100', 'border-emerald-500');
+        score++;
+      } else {
+        btn.classList.add('bg-red-100', 'border-red-500');
+      }
+      document.getElementById('score').innerText = score;
+      setTimeout(() => {
+        currentIndex++;
+        if (currentIndex < quizData.length) {
+          showQuestion();
+        } else {
+          finishQuiz();
+        }
+      }, 600);
+    }
+
+    function finishQuiz() {
+      document.getElementById('quizBox').classList.add('hidden');
+      document.getElementById('quizStatus').classList.add('hidden');
+      document.getElementById('resultBox').classList.remove('hidden');
+      document.getElementById('finalScore').innerText = `${score} / ${quizData.length}`;
+    }
+  </script>
+
+</body>
+</html>

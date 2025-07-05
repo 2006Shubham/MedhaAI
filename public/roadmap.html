@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MedhaAi — MVP Roadmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .scale-in {
+      animation: scaleIn 0.4s ease-in-out;
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    body {
+      background: radial-gradient(circle at top left, #ecfdf5, #d1fae5);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- ✅ Premium Header -->
+  <header class="fixed top-0 left-0 w-full bg-white shadow z-50 flex justify-between items-center px-6 py-4">
+    <h1 class="text-2xl font-extrabold text-emerald-700">MedhaAi</h1>
+    <nav class="hidden md:flex space-x-6">
+      <a href="index.html" class="text-gray-700 hover:text-emerald-600">Home</a>
+      <a href="roadmap.html" class="text-gray-700 hover:text-emerald-600">Roadmap</a>
+      <a href="chatbot.html" class="text-gray-700 hover:text-emerald-600">Chatbot</a>
+      <a href="quiz.html" class="text-gray-700 hover:text-emerald-600">Interactive Learning</a>
+      <a href="#join" class="text-gray-700 hover:text-emerald-600">Join Us</a>
+    </nav>
+  </header>
+
+  <!-- ✅ Main MVP Content -->
+  <main class="flex-grow flex flex-col items-center pt-32 pb-10 p-8">
+    <h1 class="text-4xl font-extrabold text-indigo-800 mb-2">MedhaAi — Roadmap MVP</h1>
+    <p class="mb-6 text-gray-700">Upload your notes OR enter a topic → Quick 5 MCQs → Unlock your Path!</p>
+
+    <!-- TABS -->
+    <div class="flex border-b-2 border-emerald-400 mb-6">
+      <button id="uploadTab" class="px-4 py-2 font-bold text-emerald-700 border-b-4 border-emerald-700">Upload</button>
+      <button id="topicTab" class="px-4 py-2 text-gray-700 hover:text-emerald-600">From Topic</button>
+    </div>
+
+    <!-- INPUTS -->
+    <div id="uploadSection" class="w-full max-w-md mb-6">
+      <label class="block mb-2 font-semibold">Upload document:</label>
+      <input type="file" class="w-full border border-gray-300 p-3 mb-4 rounded" disabled>
+      <p class="text-sm text-gray-500 italic">📌 File upload placeholder — coming soon!</p>
+    </div>
+
+    <div id="topicSection" class="hidden w-full max-w-md mb-6 fade-in">
+      <label class="block mb-2 font-semibold">Enter topic:</label>
+      <input id="topicInput" type="text" placeholder="e.g., Java Basics"
+        class="w-full border border-gray-300 p-3 mb-4 rounded">
+    </div>
+
+    <button id="generateBtn"
+      class="bg-emerald-600 text-white px-8 py-3 rounded-full font-bold hover:bg-emerald-700 transition shadow">
+      Generate My Path
+    </button>
+
+    <!-- Sections -->
+    <div id="mcqSection" class="mt-10 w-full max-w-3xl hidden fade-in"></div>
+    <div id="cardsSection" class="mt-10 w-full max-w-3xl hidden fade-in"></div>
+  </main>
+
+  <!-- ✅ Premium Footer -->
+  <footer class="bg-emerald-800 text-white text-center py-6">
+    <p>&copy; 2025 MedhaAi. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const uploadTab = document.getElementById('uploadTab');
+    const topicTab = document.getElementById('topicTab');
+    const uploadSection = document.getElementById('uploadSection');
+    const topicSection = document.getElementById('topicSection');
+    const generateBtn = document.getElementById('generateBtn');
+    const topicInput = document.getElementById('topicInput');
+    const mcqSection = document.getElementById('mcqSection');
+    const cardsSection = document.getElementById('cardsSection');
+
+    uploadTab.onclick = () => {
+      uploadTab.classList.add('border-b-4', 'border-emerald-700');
+      topicTab.classList.remove('border-b-4', 'border-emerald-700');
+      uploadSection.classList.remove('hidden');
+      topicSection.classList.add('hidden');
+    };
+
+    topicTab.onclick = () => {
+      topicTab.classList.add('border-b-4', 'border-emerald-700');
+      uploadTab.classList.remove('border-b-4', 'border-emerald-700');
+      topicSection.classList.remove('hidden');
+      uploadSection.classList.add('hidden');
+    };
+
+    generateBtn.onclick = () => {
+      generateBtn.classList.add('hidden');
+      uploadSection.classList.add('hidden');
+      topicSection.classList.add('hidden');
+
+      const dummyMCQs = [
+        { q: "What is Java?", a: ["Programming Language", "Coffee", "Animal"], correct: 0 },
+        { q: "Java is?", a: ["Compiled", "Interpreted", "Both"], correct: 2 },
+        { q: "Which keyword for inheritance?", a: ["extends", "implements", "inherits"], correct: 0 },
+        { q: "Which company made Java?", a: ["Google", "Sun Microsystems", "Apple"], correct: 1 },
+        { q: "Main method signature?", a: ["public void main()", "public static void main()", "void main()"], correct: 1 },
+      ];
+
+      buildMCQs(dummyMCQs);
+    };
+
+    function buildMCQs(mcqs) {
+      mcqSection.classList.remove('hidden');
+      mcqSection.innerHTML = `<h2 class="text-2xl font-bold mb-4 text-emerald-700">Quick 5 Questions</h2>`;
+
+      mcqs.forEach((mcq, i) => {
+        const div = document.createElement('div');
+        div.className = "mb-6 p-6 bg-white rounded-xl shadow scale-in";
+
+        div.innerHTML = `
+          <p class="mb-4 font-semibold text-lg">${mcq.q}</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${mcq.a.map((opt, idx) => `
+              <div class="option border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-emerald-600 hover:scale-105 transition"
+                   data-q="${i}" data-idx="${idx}">${opt}</div>
+            `).join('')}
+          </div>
+        `;
+        mcqSection.appendChild(div);
+      });
+
+      const btn = document.createElement('button');
+      btn.textContent = "Submit Answers";
+      btn.className = "mt-4 bg-emerald-600 text-white px-6 py-3 rounded-full hover:bg-emerald-700 transition shadow";
+      btn.onclick = buildPath;
+      mcqSection.appendChild(btn);
+
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.onclick = () => {
+          const siblings = opt.parentElement.querySelectorAll('.option');
+          siblings.forEach(s => s.classList.remove('border-emerald-600', 'bg-emerald-50'));
+          opt.classList.add('border-emerald-600', 'bg-emerald-50');
+        };
+      });
+    }
+
+    function buildPath() {
+      mcqSection.classList.add('hidden');
+      cardsSection.classList.remove('hidden');
+      cardsSection.innerHTML = `
+        <h2 class="text-2xl font-bold mb-4 text-emerald-700">Your Learning Path</h2>
+        <div class="flex flex-col gap-4" id="cards"></div>
+        <div class="w-full bg-gray-200 rounded-full h-4 mt-4">
+          <div id="progress" class="bg-emerald-600 h-4 rounded-full w-0 transition-all duration-500"></div>
+        </div>
+      `;
+
+      const steps = [
+        "Step 1: Learn Syntax",
+        "Step 2: OOP Basics",
+        "Step 3: Practice Questions",
+        "Step 4: Small Project",
+        "Step 5: Mock Test",
+        "Try Yourself"
+      ];
+
+      const cardsDiv = document.getElementById('cards');
+
+      steps.forEach((step, idx) => {
+        const card = document.createElement('div');
+        card.className = `p-6 bg-white rounded-xl shadow border hover:shadow-xl transition transform scale-in ${idx ? 'opacity-50 pointer-events-none' : ''}`;
+        card.innerHTML = `
+          <h3 class="font-bold mb-2">${step}</h3>
+          ${idx < steps.length - 1 ?
+            `<button class="unlock bg-emerald-600 text-white px-4 py-2 rounded-full hover:bg-emerald-700 transition">Mark Done</button>` :
+            `<button class="bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition">Try Yourself</button>`
+          }
+        `;
+        cardsDiv.appendChild(card);
+      });
+
+      document.querySelectorAll('.unlock').forEach((btn, idx) => {
+        btn.onclick = () => {
+          btn.parentElement.classList.add('opacity-50', 'pointer-events-none');
+          const next = cardsDiv.children[idx + 1];
+          if (next) next.classList.remove('opacity-50', 'pointer-events-none');
+          document.getElementById('progress').style.width = `${Math.round(((idx + 1) / steps.length) * 100)}%`;
+        };
+      });
+    }
+  </script>
+</body>
+</html>

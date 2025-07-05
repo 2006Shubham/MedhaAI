@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedhaAI - Interactive Learning</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #f0fdfa, #e0f2f1);
+      overflow-x: hidden;
+    }
+    .locked {
+      filter: grayscale(1) blur(2px);
+      pointer-events: none;
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+    .active {
+      transform: scale(1);
+      filter: none;
+      pointer-events: auto;
+      opacity: 1;
+      transition: all 0.5s ease-in-out;
+    }
+    .bg-shape {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(160px);
+      opacity: 0.15;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body class="flex flex-col min-h-screen relative">
+
+  <!-- ✅ Header same as index.html -->
+  <header class="fixed top-0 left-0 w-full bg-white shadow z-50 flex justify-between items-center px-6 py-4">
+    <h1 class="text-2xl font-extrabold text-emerald-700">MedhaAI</h1>
+    <nav class="hidden md:flex space-x-6">
+      <a href="index.html" class="text-gray-700 hover:text-emerald-600">Home</a>
+      <a href="roadmap.html" class="text-gray-700 hover:text-emerald-600">Roadmap</a>
+      <a href="chatbot.html" class="text-gray-700 hover:text-emerald-600">Chatbot</a>
+      <a href="quiz.html" class="text-gray-700 hover:text-emerald-600">Interactive Learning</a>
+      <a href="#join" class="text-gray-700 hover:text-emerald-600">Join Us</a>
+    </nav>
+    <button id="menu-toggle" class="md:hidden text-emerald-700 focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+    <div id="mobile-menu" class="hidden absolute top-full right-0 bg-white shadow-md w-full flex flex-col space-y-4 px-6 py-4 md:hidden">
+      <a href="index.html" class="text-gray-700 hover:text-emerald-600">Home</a>
+      <a href="roadmap.html" class="text-gray-700 hover:text-emerald-600">Roadmap</a>
+      <a href="chatbot.html" class="text-gray-700 hover:text-emerald-600">Chatbot</a>
+      <a href="#join" class="text-gray-700 hover:text-emerald-600">Join Us</a>
+    </div>
+  </header>
+
+  <!-- ✅ Page content -->
+  <main class="flex flex-col items-center justify-start flex-grow pt-32 pb-10 p-8 relative">
+    <!-- Shapes for premium vibe -->
+    <div class="bg-shape w-96 h-96 bg-indigo-400 top-0 left-0 animate-spin"></div>
+    <div class="bg-shape w-80 h-80 bg-emerald-400 bottom-0 right-0 animate-pulse"></div>
+
+    <h1 class="text-4xl font-extrabold text-indigo-800 mb-8">🚀 Build Your Personalized Path</h1>
+
+    <!-- Upload or Topic -->
+    <div class="bg-white p-6 rounded-xl shadow max-w-lg w-full mb-8">
+      <div class="mb-4">
+        <label class="font-semibold block mb-2">Upload Document</label>
+        <input type="file" id="upload-file" class="border p-2 w-full rounded" />
+      </div>
+      <div class="text-center font-bold my-2 text-gray-500">OR</div>
+      <div class="mb-4">
+        <label class="font-semibold block mb-2">Enter Topic Name</label>
+        <input type="text" id="topic-name" placeholder="e.g. Cloud Computing" class="border p-2 w-full rounded" />
+      </div>
+      <button onclick="startFlow()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded w-full transition shadow">
+        Start Path
+      </button>
+    </div>
+
+    <!-- MCQ Quiz -->
+    <div id="quiz-section" class="bg-white p-6 rounded-xl shadow max-w-lg w-full mb-8 hidden">
+      <h2 id="quiz-question" class="text-xl font-bold mb-4"></h2>
+      <div id="quiz-options" class="space-y-3"></div>
+    </div>
+
+    <!-- Learning Path -->
+    <div id="path-section" class="w-full max-w-3xl hidden space-y-8"></div>
+  </main>
+
+  <!-- ✅ Footer same vibe -->
+  <footer class="bg-emerald-800 text-white text-center py-6">
+    <p>&copy; 2025 MedhaAI. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    const GEMINI_API_KEY = 'YOUR_GEMINI_KEY'; // Replace with your real key
+
+    let currentQuestion = 0;
+    let mcqList = [];
+    let answers = [];
+
+    async function startFlow() {
+      const topic = document.getElementById('topic-name').value.trim();
+      const file = document.getElementById('upload-file').files[0];
+
+      if (file) {
+        alert("📄 Uploaded: " + file.name + ". Implement file parsing with Gemini if needed.");
+      } else if (topic) {
+        document.getElementById('quiz-section').classList.remove('hidden');
+        mcqList = await getMCQsFromGemini(topic);
+        showQuestion();
+      } else {
+        alert("Please upload a file OR enter a topic.");
+      }
+    }
+
+    async function getMCQsFromGemini(topic) {
+      const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `Generate 5 multiple choice questions about "${topic}" with 4 options each and mark correct option. Return JSON like [{question, options:[...], answer}].`
+            }]
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.candidates[0].content.parts[0].text;
+      return JSON.parse(text);
+    }
+
+    function showQuestion() {
+      const q = mcqList[currentQuestion];
+      document.getElementById('quiz-question').innerText = `Q${currentQuestion + 1}: ${q.question}`;
+      const optionsDiv = document.getElementById('quiz-options');
+      optionsDiv.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.className = 'w-full text-left px-4 py-2 rounded border hover:bg-indigo-100 transition';
+        btn.onclick = () => handleAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(opt) {
+      answers.push({ question: mcqList[currentQuestion].question, selected: opt, correct: mcqList[currentQuestion].answer });
+      currentQuestion++;
+      if (currentQuestion < mcqList.length) {
+        showQuestion();
+      } else {
+        document.getElementById('quiz-section').classList.add('hidden');
+        generatePathCards();
+      }
+    }
+
+    function generatePathCards() {
+      const pathDiv = document.getElementById('path-section');
+      pathDiv.classList.remove('hidden');
+      for (let i = 1; i <= 8; i++) {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-xl shadow p-6 transition locked';
+        card.id = 'step-' + i;
+        card.innerHTML = `
+          <h3 class="text-xl font-bold mb-2 text-emerald-700">Step ${i}</h3>
+          <p class="mb-4 text-gray-700">Generated learning step ${i} for your topic.</p>
+          <button onclick="unlockStep(${i})" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition">
+            Complete Step
+          </button>
+        `;
+        if (i === 1) card.classList.add('active');
+        pathDiv.appendChild(card);
+      }
+    }
+
+    function unlockStep(step) {
+      const current = document.getElementById('step-' + step);
+      current.classList.remove('active');
+      current.classList.add('locked');
+
+      const next = document.getElementById('step-' + (step + 1));
+      if (next) {
+        next.classList.remove('locked');
+        next.classList.add('active');
+      } else {
+        alert("🎉 Path complete! Add final interactive test here.");
+      }
+    }
+  </script>
+
+</body>
+</html>
