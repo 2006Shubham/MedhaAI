@@ -4,6 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MedhaAi - Personalized Learning</title>
+
+  <script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,mr,ta,te,kn,gu,bn',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -29,6 +46,25 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+
+
+    /* Hide Google Translate top banner */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+
+/* Optional: Hide Google branding if you want */
+.goog-logo-link, .goog-te-gadget span {
+  display: none !important;
+}
+.goog-te-gadget {
+  color: transparent !important;
+}
+
+
   </style>
 </head>
 
@@ -45,6 +81,11 @@
       <a href="news.html" class="text-gray-700 hover:text-indigo-600">News</a>
       <a href="auth.html" class="text-gray-700 hover:text-indigo-600">Join Us</a>
     </nav>
+
+    <div style="display: flex; align-items: center; gap: 8px;">
+  <span style="font-weight: 600;">🌐 Select Language:</span>
+  <div id="google_translate_element"></div>
+
     <button id="menu-toggle" class="md:hidden text-indigo-700 focus:outline-none">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
         viewBox="0 0 24 24">
@@ -59,6 +100,9 @@
       <a href="#join" class="text-gray-700 hover:text-indigo-600">Join Us</a>
     </div>
   </header>
+
+  
+</div>
 
   <!-- Hero -->
   <section id="about"
