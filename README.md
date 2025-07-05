@@ -1,2 +1,4 @@
-# MedhaAI
-Personalized AI path generator
+# Medha AI 
+# Our Personalized AI Learning Platform 
+
+
