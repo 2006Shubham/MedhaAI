@@ -1,102 +1,105 @@
 require('dotenv').config();
 const express = require('express');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const fs = require('fs').promises;
 const path = require('path');
+const { IncomingForm } = require('formidable');
+const pdf = require('pdf-parse');
+const mammoth = require('mammoth');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const API_KEY = process.env.GEMINI_API_KEY;
 if (!API_KEY) {
-  console.error('❌ GEMINI_API_KEY not found in .env');
+  console.error('❌ GEMINI_API_KEY not found. Check your .env!');
   process.exit(1);
 }
-
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ Basic chatbot (optional)
-app.post('/ask', async (req, res) => {
-  try {
-    const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ error: 'Prompt required' });
-
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
-    const result = await model.generateContent(prompt);
-    const text = await result.response.text();
-
-    res.json({ response: text });
-  } catch (err) {
-    console.error('❌ Chat error:', err);
-    res.status(500).json({ error: 'Gemini failed' });
-  }
+app.get('/', (_, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ✅ FINAL MCQ endpoint with double parse fallback
-app.post('/generate-mcq', async (req, res) => {
+// ✅ 1️⃣ Upload + extract
+app.post('/upload-and-extract-text', async (req, res) => {
+  const form = new IncomingForm({
+    multiples: false,
+    uploadDir: path.join(__dirname, 'temp_uploads'),
+    keepExtensions: true
+  });
+  await fs.mkdir(form.uploadDir, { recursive: true });
+
+  form.parse(req, async (err, _, files) => {
+    if (err) return res.status(500).json({ error: 'Upload failed.' });
+    const file = files.document && files.document[0];
+    if (!file) return res.status(400).json({ error: 'No file uploaded.' });
+
+    const filePath = file.filepath;
+    const ext = path.extname(file.originalFilename).toLowerCase();
+    let text = '';
+
+    try {
+      if (ext === '.txt') {
+        text = await fs.readFile(filePath, 'utf8');
+      } else if (ext === '.pdf') {
+        const pdfData = await pdf(await fs.readFile(filePath));
+        text = pdfData.text;
+      } else if (ext === '.doc' || ext === '.docx') {
+        const doc = await mammoth.extractRawText({ path: filePath });
+        text = doc.value;
+      } else {
+        return res.status(400).json({ error: 'Unsupported file type.' });
+      }
+      await fs.unlink(filePath);
+      if (text.trim().length < 50) return res.status(400).json({ error: 'Text too short.' });
+      res.json({ textContent: text });
+    } catch (e) {
+      await fs.unlink(filePath);
+      res.status(500).json({ error: 'Processing failed.' });
+    }
+  });
+});
+
+// ✅ 2️⃣ Generate MCQs (SAFE JSON)
+app.post('/generate-mcqs', async (req, res) => {
+  const { documentText } = req.body;
+  if (!documentText) return res.status(400).json({ error: 'Missing text' });
+
+  const prompt = `Create 5 MCQs from this text. Each MCQ must have:
+  {
+    "question": "...",
+    "options": { "A": "...", "B": "...", "C": "...", "D": "..." },
+    "correct_answer": "A"
+  }
+  Text: ${documentText}
+  Give only pure JSON array.`;
+
   try {
-    const { topic } = req.body;
-    if (!topic) return res.status(400).json({ error: 'Topic required' });
-
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
-
-    const prompt = `
-      Generate exactly 5 beginner multiple-choice questions for "${topic}".
-      Format strictly:
-      [
-        {"q":"Question","a":["Option1","Option2","Option3"],"correct":1},
-        ...
-      ]
-      No explanation, no extra text, no markdown — only raw JSON array.
-    `;
-
-    const result = await model.generateContent(prompt);
+    const result = await genAI.getGenerativeModel({ model: 'gemini-2.5-pro' }).generateContent(prompt);
     let raw = await result.response.text();
 
-    console.log('\n💡 RAW Gemini output:\n', raw);
+    // Clean markdown code fences if any
+    if (raw.startsWith('```json')) raw = raw.slice(7, -3).trim();
+    if (raw.startsWith('```')) raw = raw.slice(3, -3).trim();
 
-    // Clean typical junk
-    raw = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const mcqs = JSON.parse(raw);
 
-    // Try direct parse
-    let mcqs;
-    try {
-      mcqs = JSON.parse(raw);
-    } catch {
-      // Try slicing by bracket
-      const start = raw.indexOf('[');
-      const end = raw.lastIndexOf(']');
-      if (start === -1 || end === -1) throw new Error('No valid [ ] block found.');
-      const cleanJson = raw.substring(start, end + 1);
-      mcqs = JSON.parse(cleanJson);
-    }
+    if (!Array.isArray(mcqs)) throw new Error('Invalid Gemini response');
 
-    if (!Array.isArray(mcqs) || mcqs.length < 1) {
-      throw new Error('Parsed MCQ array invalid.');
-    }
-
-    res.json({ mcqs });
+    res.json(mcqs);
 
   } catch (err) {
-    console.error('❌ MCQ error:', err);
-    // ✅ Fallback
-    const fallback = [
-      { q: "What is HTML?", a: ["Programming", "Markup", "Language"], correct: 1 },
-      { q: "CSS stands for?", a: ["Cascading", "Central", "Creative"], correct: 0 },
-      { q: "JS is?", a: ["Compiled", "Interpreted", "None"], correct: 1 },
-      { q: "API means?", a: ["Application", "Apple", "Apply"], correct: 0 },
-      { q: "HTTP full form?", a: ["Hyper Text", "High Tech", "Hyper Transfer"], correct: 0 }
-    ];
-    res.json({ mcqs: fallback });
+    console.error(err);
+    res.status(500).json({ error: 'MCQ generation failed: ' + err.message });
   }
 });
 
-app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'roadmap.html'));
-});
 
-app.listen(port, () => {
-  console.log(`🚀 Server running → http://localhost:${port}`);
-});
+// ✅ 3️⃣ Done — no roadmap, no extra confusion
+// You can add /generate-roadmap again later if needed.
+
+app.listen(port, () => console.log(`✅ Server running: http://localhost:${port}`));

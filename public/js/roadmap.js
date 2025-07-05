@@ -1,161 +1,125 @@
-const uploadTab = document.getElementById('uploadTab');
-const topicTab = document.getElementById('topicTab');
+const documentUpload = document.getElementById('documentUpload');
+const generatePathBtn = document.getElementById('generatePathBtn');
+const messageDisplay = document.getElementById('message');
+
 const uploadSection = document.getElementById('uploadSection');
-const topicSection = document.getElementById('topicSection');
-const generateBtn = document.getElementById('generateBtn');
-const topicInput = document.getElementById('topicInput');
+const loaderSection = document.getElementById('loaderSection');
 const mcqSection = document.getElementById('mcqSection');
-const cardsSection = document.getElementById('cardsSection');
+const roadmapSection = document.getElementById('roadmapSection');
 
-// ✅ Tabs toggle
-uploadTab.onclick = () => {
-  uploadTab.classList.add('border-b-4', 'border-purple-700');
-  topicTab.classList.remove('border-b-4', 'border-purple-700');
-  uploadSection.classList.remove('hidden');
-  topicSection.classList.add('hidden');
-};
+const mcqContainer = document.getElementById('mcqContainer');
 
-topicTab.onclick = () => {
-  topicTab.classList.add('border-b-4', 'border-purple-700');
-  uploadTab.classList.remove('border-b-4', 'border-purple-700');
-  topicSection.classList.remove('hidden');
+const cardsContainer = document.getElementById('cardsContainer');
+const progressFill = document.getElementById('progressFill');
+
+const toMcqBtn = document.getElementById('toMcqBtn');
+const toLearningBtn = document.getElementById('toLearningBtn');
+const returnBtn = document.getElementById('returnBtn');
+
+let extractedText = '';
+let mcqs = [];
+let currentIndex = 0;
+
+documentUpload.addEventListener('change', () => {
+  generatePathBtn.disabled = !documentUpload.files.length;
+});
+
+generatePathBtn.addEventListener('click', async () => {
+  const file = documentUpload.files[0];
+  if (!file) return;
+
   uploadSection.classList.add('hidden');
-};
+  loaderSection.classList.remove('hidden');
 
-// ✅ Generate MCQs → handle RAW safely
-generateBtn.onclick = async () => {
-  generateBtn.classList.add('hidden');
-  uploadSection.classList.add('hidden');
-  topicSection.classList.add('hidden');
-
-  mcqSection.classList.remove('hidden');
-  mcqSection.innerHTML = `
-    <p class="text-lg text-gray-600 mb-4 animate-pulse">
-      Generating your MCQs... please wait...
-    </p>
-  `;
-
-  const prompt = topicInput.value.trim() || "Java basics";
+  const formData = new FormData();
+  formData.append('document', file);
 
   try {
-    const res = await fetch('/generate-mcq', {
+    const res = await fetch('/upload-and-extract-text', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    extractedText = data.textContent;
+
+    const mcqRes = await fetch('/generate-mcqs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic: prompt })
+      body: JSON.stringify({ documentText: extractedText })
     });
+    mcqs = await mcqRes.json().then(arr => arr.slice(0, 5));
 
-    const data = await res.json();
-    console.log('💡 RAW from server:', data.raw);
+    loaderSection.classList.add('hidden');
+    mcqSection.classList.remove('hidden');
 
-    let clean = data.raw || '';
-    clean = clean.trim().replace(/```json/gi, '').replace(/```/g, '').trim();
-
-    let mcqs;
-    try {
-      // Try direct parse
-      mcqs = JSON.parse(clean);
-    } catch {
-      console.warn('⚡ Direct parse failed — fallback to slice...');
-      const start = clean.indexOf('[');
-      const end = clean.lastIndexOf(']');
-      if (start === -1 || end === -1) throw new Error('No [ ] found in RAW!');
-      const sliced = clean.substring(start, end + 1);
-      mcqs = JSON.parse(sliced);
-    }
-
-    if (!Array.isArray(mcqs) || mcqs.length === 0) {
-      throw new Error('MCQ JSON empty or invalid!');
-    }
-
-    buildMCQs(mcqs);
+    currentIndex = 0;
+    renderMCQ();
 
   } catch (err) {
-    mcqSection.innerHTML = `<p class="text-red-500">❌ Failed to generate MCQs. Please try again.</p>`;
+    messageDisplay.textContent = '❌ Error, try again.';
     console.error(err);
   }
-};
+});
 
-// ✅ Build MCQ cards
-function buildMCQs(mcqs) {
-  mcqSection.innerHTML = `<h2 class="text-2xl font-bold mb-4 text-purple-700">Answer these:</h2>`;
-
-  mcqs.forEach((mcq, i) => {
-    const div = document.createElement('div');
-    div.className = "mb-6 p-6 bg-white rounded-xl shadow transition-transform";
-
-    div.innerHTML = `
-      <p class="mb-4 font-semibold text-lg">${mcq.q}</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        ${mcq.a.map((opt, idx) => `
-          <div class="option border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-purple-600 hover:scale-105 transition"
-               data-q="${i}" data-idx="${idx}">${opt}</div>
-        `).join('')}
-      </div>
-    `;
-    mcqSection.appendChild(div);
-  });
-
-  const btn = document.createElement('button');
-  btn.textContent = "Submit Answers";
-  btn.className = "mt-4 bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition";
-  btn.onclick = buildPath;
-  mcqSection.appendChild(btn);
-
+function renderMCQ() {
+  const mcq = mcqs[currentIndex];
+  mcqContainer.innerHTML = `
+    <p class="question">${mcq.question}</p>
+    <div class="options-grid">
+      ${Object.entries(mcq.options).map(([key, val]) => `
+        <div class="option" data-key="${key}">${key}. ${val}</div>
+      `).join('')}
+    </div>
+  `;
   document.querySelectorAll('.option').forEach(opt => {
     opt.onclick = () => {
-      const siblings = opt.parentElement.querySelectorAll('.option');
-      siblings.forEach(s => s.classList.remove('border-purple-600', 'bg-purple-50'));
-      opt.classList.add('border-purple-600', 'bg-purple-50');
+      if (currentIndex < mcqs.length - 1) {
+        currentIndex++;
+        renderMCQ();
+      } else {
+        buildRoadmap();
+      }
     };
   });
 }
 
-// ✅ Build personalized path
-function buildPath() {
+function buildRoadmap() {
   mcqSection.classList.add('hidden');
-  cardsSection.classList.remove('hidden');
+  roadmapSection.classList.remove('hidden');
 
-  const steps = [
-    "Step 1: Fundamentals",
-    "Step 2: Syntax & Variables",
-    "Step 3: Control Flow",
-    "Step 4: Functions",
-    "Step 5: OOP Basics",
-    "Step 6: Mini Project",
-    "Step 7: Revision & Tests",
-    "Try Out Yourself"
+  const roadmapSteps = [
+    "Step 1: Overview",
+    "Step 2: Deep Dive",
+    "Step 3: Practice Basics",
+    "Step 4: Hands-On Task",
+    "Step 5: Small Project",
+    "Step 6: Peer Review",
+    "Step 7: Mock Test",
+    "Step 8: Final Review"
   ];
 
-  cardsSection.innerHTML = `
-    <h2 class="text-2xl font-bold mb-4 text-purple-700">Your Personalized Path</h2>
-    <div class="flex flex-col gap-4" id="cards"></div>
-    <div class="w-full bg-gray-200 rounded-full h-4 mt-4">
-      <div id="progress" class="bg-purple-600 h-4 rounded-full w-0 transition-all duration-500"></div>
-    </div>
-  `;
-
-  const cardsDiv = document.getElementById('cards');
-
-  steps.forEach((step, idx) => {
+  cardsContainer.innerHTML = '';
+  roadmapSteps.forEach((step, idx) => {
     const card = document.createElement('div');
-    card.className = `p-6 bg-white rounded-xl shadow border hover:shadow-xl transition transform ${idx ? 'opacity-50 pointer-events-none' : ''}`;
+    card.className = `card ${idx ? 'locked' : ''}`;
     card.innerHTML = `
-      <h3 class="font-bold mb-2">${step}</h3>
-      ${idx < steps.length - 1
-        ? `<button class="unlock bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 transition">Mark as Done</button>`
-        : `<button class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition">Try Out Yourself</button>`
-      }
+      <h3>${step}</h3>
+      <p>Details for ${step} based on your input.</p>
+      ${idx < roadmapSteps.length - 1 ? `<button class="unlockBtn">Unlock Next</button>` : ''}
     `;
-    cardsDiv.appendChild(card);
+    cardsContainer.appendChild(card);
   });
 
-  const unlocks = document.querySelectorAll('.unlock');
-  unlocks.forEach((btn, idx) => {
+  document.querySelectorAll('.unlockBtn').forEach((btn, idx) => {
     btn.onclick = () => {
-      btn.parentElement.classList.add('opacity-50', 'pointer-events-none');
-      const next = cardsDiv.children[idx + 1];
-      if (next) next.classList.remove('opacity-50', 'pointer-events-none');
-      document.getElementById('progress').style.width = `${Math.round(((idx + 1) / steps.length) * 100)}%`;
+      btn.parentElement.classList.add('unlocked');
+      const next = cardsContainer.children[idx + 1];
+      if (next) next.classList.remove('locked');
+      progressFill.style.width = `${((idx + 1) / roadmapSteps.length) * 100}%`;
     };
   });
+
+  toMcqBtn.onclick = () => location.href = '/mcq.html';
+  toLearningBtn.onclick = () => location.href = '/interactive.html';
+  returnBtn.onclick = () => location.href = '/';
 }

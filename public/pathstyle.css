@@ -1,0 +1,101 @@
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f0f4ff;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.container {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  max-width: 600px;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+input[type="file"] {
+  margin: 1rem auto;
+}
+
+button {
+  background: #5a3ff2;
+  color: #fff;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 999px;
+  font-weight: bold;
+  margin: 10px 5px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #3d29c8;
+}
+
+.hidden {
+  display: none;
+}
+
+.loader {
+  border: 6px solid #ddd;
+  border-top: 6px solid #5a3ff2;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.option {
+  border: 2px solid #ddd;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.option:hover { border-color: #5a3ff2; }
+.option.correct { border-color: #4caf50; background: #e8f5e9; }
+.option.wrong { border-color: #f44336; background: #ffebee; }
+
+.progress-bar {
+  background: #ddd;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+#progressFill {
+  height: 100%;
+  width: 0;
+  background: #5a3ff2;
+  transition: 0.3s ease;
+}
+
+.card {
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.card.locked { opacity: 0.5; pointer-events: none; }
+.card.unlocked { opacity: 1; }
+
+.cta-buttons button {
+  margin: 10px;
+}

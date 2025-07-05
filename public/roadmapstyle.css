@@ -1,0 +1,141 @@
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: radial-gradient(circle at top left, #f0f4ff, #e6f7ff);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 50px 20px;
+}
+
+.container {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  padding: 2rem 2rem 3rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: #5a3ff2;
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+input[type="file"] {
+  display: block;
+  margin: 1rem auto;
+}
+
+button {
+  background: #5a3ff2;
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 12px 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #3d29c8;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.info {
+  margin-top: 1rem;
+  color: #333;
+}
+
+.hidden {
+  display: none;
+}
+
+#scoreDisplay {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #5a3ff2;
+}
+
+#mcqContainer {
+  background: #f9f9ff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.question {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.option {
+  padding: 1rem;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option:hover {
+  border-color: #5a3ff2;
+}
+
+.option.correct {
+  border-color: #4caf50 !important;
+  background: #e8f5e9;
+}
+
+.option.wrong {
+  border-color: #f44336 !important;
+  background: #ffebee;
+}
+
+/* ✅ Controls container for buttons */
+.mcq-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.mcq-controls button {
+  flex: 1 1 auto;
+  min-width: 100px;
+}
+
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ddd;
+  border-top: 6px solid #5a3ff2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #555;
+  font-weight: 600;
+  margin-top: 1rem;
+}

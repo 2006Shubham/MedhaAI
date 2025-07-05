@@ -13,6 +13,9 @@
     "@google/generative-ai": "^0.24.1",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
-    "marked": "^16.0.0"
+    "formidable": "^3.5.4",
+    "mammoth": "^1.9.1",
+    "marked": "^16.0.0",
+    "pdf-parse": "^1.1.1"
   }
 }
