@@ -6,7 +6,7 @@ const { IncomingForm } = require('formidable'); // Correct import for formidable
 const pdf = require('pdf-parse'); // For PDF parsing
 const mammoth = require('mammoth'); // For .docx parsing
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-
+const newsRouter = require('./routes/news');
 const app = express();
 const port = process.env.PORT || 3000; // Use port from .env or default
 
@@ -226,7 +226,7 @@ app.post('/generate-text', async (req, res) => {
     }
 });
 
-
+app.use('/api/news', newsRouter);
 
 // Start the server
 app.listen(port, () => {
