@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multilingual Demo - LibreTranslate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f9f9f9;
+    }
+    #translated {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="translated">Welcome to SmartNews!</h1>
+
+  <label for="langSelector"><strong>Select Language:</strong></label>
+  <select id="langSelector">
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="mr">Marathi</option>
+    <option value="ta">Tamil</option>
+    <option value="bn">Bengali</option>
+    <option value="gu">Gujarati</option>
+  </select>
+
+  <script>
+    const originalText = "Welcome to SmartNews!";
+    const output = document.getElementById('translated');
+    const langSelector = document.getElementById('langSelector');
+
+    langSelector.addEventListener('change', () => {
+      const lang = langSelector.value;
+
+      if (lang === 'en') {
+        output.textContent = originalText;
+        return;
+      }
+
+      fetch('/api/translate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          q: originalText,
+          target: lang
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        output.textContent = data.translatedText || "Translation failed.";
+      })
+      .catch(err => {
+        console.error("Translation error:", err);
+        output.textContent = "Error during translation.";
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -10,6 +10,12 @@ const newsRouter = require('./routes/news');
 const app = express();
 const port = process.env.PORT || 3000; // Use port from .env or default
 
+const translateRoute = require('./routes/translate');
+
+
+app.use(express.json()); // 🛑 REQUIRED to read JSON POST bodies
+
+
 // Configure Google Gemini API
 const API_KEY = process.env.GEMINI_API_KEY;
 if (!API_KEY) {
@@ -227,6 +233,8 @@ app.post('/generate-text', async (req, res) => {
 });
 
 app.use('/api/news', newsRouter);
+app.use('/api/translate', translateRoute);
+
 
 // Start the server
 app.listen(port, () => {
