@@ -1,0 +1,168 @@
+/* res/chatbotstyle.css */
+
+/* General Body Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5; /* Light background */
+    color: #333;
+}
+
+/* Main Chat Container */
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    height: 90vh; /* Make the container take up most of the viewport height */
+    overflow: hidden; /* Ensure nothing spills out of the main container */
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    padding: 20px;
+    margin: 0;
+    border-bottom: 1px solid #eee;
+    font-size: 1.8em;
+}
+
+/* Result Output Area (the chat log) */
+#resultContainer {
+    flex-grow: 1; /* Allows it to take available vertical space */
+    padding: 15px;
+    display: flex;
+    flex-direction: column; /* Stacks messages vertically */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    scroll-behavior: smooth; /* Smooth scrolling for new messages */
+}
+
+/* Scrollbar Styling for resultOutput (Modern Look) */
+#resultContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#resultContainer::-webkit-scrollbar-thumb {
+    background-color: #a0a0a0;
+    border-radius: 4px;
+}
+
+#resultContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #777777;
+}
+
+#resultContainer::-webkit-scrollbar-track {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+}
+
+/* Message Bubble Base Style */
+.message-bubble {
+    max-width: 80%; /* Limit bubble width */
+    padding: 10px 15px;
+    border-radius: 20px; /* General rounded corners */
+    margin-bottom: 10px;
+    line-height: 1.4;
+    word-wrap: break-word; /* Prevents long words from breaking layout */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* User Message Bubble (Prompt) */
+.user-message {
+    align-self: flex-end; /* Aligns to the right */
+    background-color: #007bff; /* A distinct color for user messages (blue) */
+    color: white;
+    /* Optional: Fine-tune corner for a "tail" look */
+    border-bottom-right-radius: 5px;
+}
+
+/* AI Response Bubble */
+.ai-message {
+    align-self: flex-start; /* Aligns to the left (default) */
+    background-color: #e2e2e2; /* A distinct color for AI messages (light gray) */
+    color: #333;
+    /* Optional: Fine-tune corner for a "tail" look */
+    border-bottom-left-radius: 5px;
+}
+
+/* Input Area - More aligned to Gemini/ChatGPT */
+#input-area {
+    display: flex;
+    align-items: center; /* Vertically align items in the center */
+    padding: 15px 20px; /* More horizontal padding */
+    border-top: 1px solid #eee;
+    background-color: #f9f9f9;
+    gap: 10px; /* Space between textarea and button */
+}
+
+#promptInput {
+    padding: 12px 18px; /* Slightly more padding for a larger feel */
+    border: 1px solid #dcdcdc; /* Lighter border */
+    border-radius: 25px; /* Fully rounded input field */
+    font-size: 1em;
+    outline: none; /* Remove default focus outline */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    resize: none; /* Disable textarea resizing */
+    max-height: 150px; /* Allow it to grow a bit taller */
+}
+
+#promptInput:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Subtle blue glow */
+}
+
+
+/* Button Styling - More like a modern chat send button */
+#generateBtn {
+    background-color: #1a73e8; /* Google blue for send button */
+    color: white;
+    border: none;
+    padding: 12px 20px; /* Adjusted padding for better look */
+    border-radius: 25px; /* Fully rounded button */
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500; /* Slightly bolder text */
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    white-space: nowrap; /* Prevent button text from wrapping */
+    display: flex; /* Use flex to center icon if added */
+    align-items: center;
+    justify-content: center;
+    min-width: 80px; /* Ensure a minimum width */
+}
+
+#generateBtn:hover {
+    background-color: #155bb5; /* Darker blue on hover */
+    transform: translateY(-1px);
+}
+
+#generateBtn:active {
+    transform: translateY(0);
+    background-color: #0d47a1; /* Even darker on active */
+}
+
+/* Loading state for messages (optional) */
+.loading-message {
+    font-style: italic;
+    color: #888;
+}
+
+/* Basic styling for error messages */
+.error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+.input{
+    display: flex;
+    flex-direction: row;
+}

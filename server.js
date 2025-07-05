@@ -198,6 +198,36 @@ app.post('/generate-mcqs', async (req, res) => {
     }
 });
 
+
+
+app.post('/generate-text', async (req, res) => {
+    try {
+        const { prompt } = req.body; // Get the prompt from the frontend request body
+
+        if (!prompt) {
+            return res.status(400).json({ error: 'Prompt is required.' });
+        }
+
+        // Choose the model (e.g., "gemini-pro" for text, "gemini-1.5-flash" for speed)
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+
+        // Generate content using the Gemini model
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text(); // Extract the generated text
+
+        // Send the generated text back to the frontend
+        res.json({ generatedText: text });
+
+    } catch (error) {
+        console.error('Error calling Gemini API:', error);
+        // Provide a more user-friendly error message to the frontend
+        res.status(500).json({ error: 'Failed to generate text. Please try again or check server logs.' });
+    }
+});
+
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
