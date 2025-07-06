@@ -67,8 +67,6 @@ button:hover {
 }
 
 .option:hover { border-color: #5a3ff2; }
-.option.correct { border-color: #4caf50; background: #e8f5e9; }
-.option.wrong { border-color: #f44336; background: #ffebee; }
 
 .progress-bar {
   background: #ddd;

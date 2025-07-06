@@ -26,6 +26,7 @@ generatePathBtn.addEventListener('click', async () => {
 
   uploadSection.classList.add('hidden');
   loaderSection.classList.remove('hidden');
+  messageDisplay.textContent = '⏳ Extracting & generating MCQs...';
 
   const formData = new FormData();
   formData.append('document', file);
@@ -43,17 +44,17 @@ generatePathBtn.addEventListener('click', async () => {
 
     mcqs = await mcqRes.json();
     mcqs = mcqs.slice(0, 5);
+    answers = [];
+    currentIndex = 0;
 
     loaderSection.classList.add('hidden');
     mcqSection.classList.remove('hidden');
 
-    currentIndex = 0;
-    answers = [];
     renderMCQ();
 
   } catch (err) {
+    messageDisplay.textContent = '❌ Error: ' + err.message;
     console.error(err);
-    messageDisplay.textContent = 'Error occurred.';
   }
 });
 
@@ -62,11 +63,8 @@ function renderMCQ() {
   mcqContainer.innerHTML = `
     <p class="question">${mcq.question}</p>
     <div class="options-grid">
-      ${Object.entries(mcq.options).map(([key, val]) => `
-        <div class="option" data-key="${key}">${key}. ${val}</div>
-      `).join('')}
+      ${Object.entries(mcq.options).map(([k, v]) => `<div class="option" data-key="${k}">${k}. ${v}</div>`).join('')}
     </div>
-    <p class="progress">Question ${currentIndex + 1} of ${mcqs.length}</p>
   `;
 
   document.querySelectorAll('.option').forEach(opt => {
@@ -76,36 +74,56 @@ function renderMCQ() {
         currentIndex++;
         renderMCQ();
       } else {
-        buildRoadmap(); // 👉 LOCAL STATIC, no Gemini!
+        buildRoadmap();
       }
     };
   });
 }
 
-function buildRoadmap() {
+async function buildRoadmap() {
   mcqSection.classList.add('hidden');
-  roadmapSection.classList.remove('hidden');
+  loaderSection.classList.remove('hidden');
+  messageDisplay.textContent = '🔍 Building roadmap...';
 
-  const steps = [
-    { title: 'Step 1: Basics', description: 'Learn basics.', details: 'Do this and that.' },
-    { title: 'Step 2: Practice', description: 'Practice topics.', details: 'Hands-on exercises.' },
-    { title: 'Step 3: Quiz', description: 'Test yourself.', details: 'Solve quizzes.' },
-    { title: 'Step 4: Projects', description: 'Build small projects.', details: 'Apply knowledge.' },
-    { title: 'Step 5: Review', description: 'Revise concepts.', details: 'Repeat important parts.' },
-    { title: 'Step 6: Peer Feedback', description: 'Discuss with peers.', details: 'Get feedback.' },
-    { title: 'Step 7: Mock Test', description: 'Take mock exams.', details: 'Prepare well.' },
-    { title: 'Step 8: Final Step', description: 'Final review.', details: 'Ready to deploy.' }
-  ];
+  try {
+    const res = await fetch('/generate-roadmap', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers, textContent: extractedText })
+    });
 
+    if (!res.ok) throw new Error('Roadmap request failed');
+
+    const data = await res.json();
+    loaderSection.classList.add('hidden');
+    roadmapSection.classList.remove('hidden');
+
+    renderCards(data.roadmap);
+
+  } catch (err) {
+    console.error('❌ Path.js Error:', err);
+    messageDisplay.textContent = '❌ Roadmap failed.';
+  }
+}
+
+function renderCards(roadmap) {
   cardsContainer.innerHTML = '';
-  steps.forEach((step, idx) => {
+  roadmap.forEach((step, idx) => {
     const card = document.createElement('div');
     card.className = `card ${idx ? 'locked' : ''}`;
     card.innerHTML = `
       <h3>${step.title}</h3>
       <p>${step.description}</p>
       <p>${step.details}</p>
-      ${idx < steps.length - 1 ? `<button class="unlockBtn">Unlock Next</button>` : `<p>🎉 Done!</p>`}
+      ${step.resources && step.resources.length ? `<div class="resources">
+        ${step.resources.map(link => `<a href="${link}" target="_blank">${link}</a>`).join('<br>')}
+      </div>` : ''}
+      ${idx < roadmap.length - 1 ? `<button class="unlockBtn">Unlock Next</button>` : `
+        <div class="final-actions">
+          <button onclick="location.href='/mcq.html'">📚 MCQs</button>
+          <button onclick="location.href='/interactive.html'">🚀 Interactive</button>
+          <button onclick="location.href='/'">🏠 Home</button>
+        </div>`}
     `;
     cardsContainer.appendChild(card);
   });
@@ -115,7 +133,7 @@ function buildRoadmap() {
       btn.parentElement.classList.add('unlocked');
       const next = cardsContainer.children[idx + 1];
       if (next) next.classList.remove('locked');
-      progressFill.style.width = `${Math.round(((idx + 1) / steps.length) * 100)}%`;
+      progressFill.style.width = `${Math.round(((idx + 1) / roadmap.length) * 100)}%`;
     };
   });
 }

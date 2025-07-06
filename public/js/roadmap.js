@@ -1,125 +1,129 @@
 const documentUpload = document.getElementById('documentUpload');
-const generatePathBtn = document.getElementById('generatePathBtn');
+const generateMcqsBtn = document.getElementById('generateMcqsBtn');
 const messageDisplay = document.getElementById('message');
-
 const uploadSection = document.getElementById('uploadSection');
-const loaderSection = document.getElementById('loaderSection');
+const loadingSection = document.getElementById('loadingSection');
 const mcqSection = document.getElementById('mcqSection');
-const roadmapSection = document.getElementById('roadmapSection');
-
 const mcqContainer = document.getElementById('mcqContainer');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const resetBtn = document.getElementById('resetBtn');
 
-const cardsContainer = document.getElementById('cardsContainer');
-const progressFill = document.getElementById('progressFill');
-
-const toMcqBtn = document.getElementById('toMcqBtn');
-const toLearningBtn = document.getElementById('toLearningBtn');
-const returnBtn = document.getElementById('returnBtn');
-
-let extractedText = '';
 let mcqs = [];
 let currentIndex = 0;
+let score = 0;
+
+generateMcqsBtn.disabled = true;
 
 documentUpload.addEventListener('change', () => {
-  generatePathBtn.disabled = !documentUpload.files.length;
+  generateMcqsBtn.disabled = !documentUpload.files.length;
 });
 
-generatePathBtn.addEventListener('click', async () => {
+generateMcqsBtn.onclick = async () => {
   const file = documentUpload.files[0];
   if (!file) return;
 
   uploadSection.classList.add('hidden');
-  loaderSection.classList.remove('hidden');
+  loadingSection.classList.remove('hidden');
 
   const formData = new FormData();
   formData.append('document', file);
 
   try {
-    const res = await fetch('/upload-and-extract-text', {
-      method: 'POST',
-      body: formData
-    });
+    const res = await fetch('/upload-and-extract-text', { method: 'POST', body: formData });
     const data = await res.json();
-    extractedText = data.textContent;
+    const text = data.textContent;
 
     const mcqRes = await fetch('/generate-mcqs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ documentText: extractedText })
+      body: JSON.stringify({ documentText: text })
     });
-    mcqs = await mcqRes.json().then(arr => arr.slice(0, 5));
 
-    loaderSection.classList.add('hidden');
+    mcqs = await mcqRes.json();
+    if (!Array.isArray(mcqs)) throw new Error('MCQ generation failed.');
+    currentIndex = 0;
+    score = 0;
+
+    mcqs.forEach(q => q.userAnswer = null);
+
+    loadingSection.classList.add('hidden');
     mcqSection.classList.remove('hidden');
 
-    currentIndex = 0;
-    renderMCQ();
+    updateScoreDisplay();
+    displayMCQ();
 
   } catch (err) {
-    messageDisplay.textContent = '❌ Error, try again.';
-    console.error(err);
+    loadingSection.classList.add('hidden');
+    uploadSection.classList.remove('hidden');
+    messageDisplay.textContent = '❌ Error: ' + err.message;
   }
-});
+};
 
-function renderMCQ() {
+function displayMCQ() {
   const mcq = mcqs[currentIndex];
-  mcqContainer.innerHTML = `
-    <p class="question">${mcq.question}</p>
-    <div class="options-grid">
-      ${Object.entries(mcq.options).map(([key, val]) => `
-        <div class="option" data-key="${key}">${key}. ${val}</div>
-      `).join('')}
-    </div>
-  `;
-  document.querySelectorAll('.option').forEach(opt => {
+  mcqContainer.innerHTML = `<p class="question">${mcq.question}</p>`;
+  const optionsGrid = document.createElement('div');
+  optionsGrid.className = 'options-grid';
+
+  for (const key of ['A', 'B', 'C', 'D']) {
+    const opt = document.createElement('div');
+    opt.className = 'option';
+    opt.textContent = `${key}. ${mcq.options[key]}`;
+
+    if (mcq.userAnswer) {
+      if (key === mcq.correct_answer) opt.classList.add('correct');
+      if (key === mcq.userAnswer && key !== mcq.correct_answer) opt.classList.add('wrong');
+    }
+
     opt.onclick = () => {
-      if (currentIndex < mcqs.length - 1) {
-        currentIndex++;
-        renderMCQ();
+      if (mcq.userAnswer) return;
+
+      mcq.userAnswer = key;
+
+      if (key === mcq.correct_answer) {
+        opt.classList.add('correct');
+        score++;
       } else {
-        buildRoadmap();
+        opt.classList.add('wrong');
+        optionsGrid.querySelectorAll('.option').forEach(o => {
+          if (o.textContent.startsWith(mcq.correct_answer)) o.classList.add('correct');
+        });
       }
+
+      updateScoreDisplay();
     };
-  });
+
+    optionsGrid.appendChild(opt);
+  }
+
+  mcqContainer.appendChild(optionsGrid);
+
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex === mcqs.length - 1;
+  if (currentIndex === mcqs.length - 1) resetBtn.classList.remove('hidden');
+  else resetBtn.classList.add('hidden');
 }
 
-function buildRoadmap() {
-  mcqSection.classList.add('hidden');
-  roadmapSection.classList.remove('hidden');
+prevBtn.onclick = () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    displayMCQ();
+  }
+};
 
-  const roadmapSteps = [
-    "Step 1: Overview",
-    "Step 2: Deep Dive",
-    "Step 3: Practice Basics",
-    "Step 4: Hands-On Task",
-    "Step 5: Small Project",
-    "Step 6: Peer Review",
-    "Step 7: Mock Test",
-    "Step 8: Final Review"
-  ];
+nextBtn.onclick = () => {
+  if (currentIndex < mcqs.length - 1) {
+    currentIndex++;
+    displayMCQ();
+  }
+};
 
-  cardsContainer.innerHTML = '';
-  roadmapSteps.forEach((step, idx) => {
-    const card = document.createElement('div');
-    card.className = `card ${idx ? 'locked' : ''}`;
-    card.innerHTML = `
-      <h3>${step}</h3>
-      <p>Details for ${step} based on your input.</p>
-      ${idx < roadmapSteps.length - 1 ? `<button class="unlockBtn">Unlock Next</button>` : ''}
-    `;
-    cardsContainer.appendChild(card);
-  });
+resetBtn.onclick = () => {
+  location.reload();
+};
 
-  document.querySelectorAll('.unlockBtn').forEach((btn, idx) => {
-    btn.onclick = () => {
-      btn.parentElement.classList.add('unlocked');
-      const next = cardsContainer.children[idx + 1];
-      if (next) next.classList.remove('locked');
-      progressFill.style.width = `${((idx + 1) / roadmapSteps.length) * 100}%`;
-    };
-  });
-
-  toMcqBtn.onclick = () => location.href = '/mcq.html';
-  toLearningBtn.onclick = () => location.href = '/interactive.html';
-  returnBtn.onclick = () => location.href = '/';
+function updateScoreDisplay() {
+  scoreDisplay.textContent = `Score: ${score} / ${mcqs.length}`;
 }

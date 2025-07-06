@@ -77,22 +77,24 @@ async function sendMessage() {
     const data = await response.json();
     removeTyping();
 
-    if (data.response) {
-      const plainText = cleanMarkdown(data.response);
+    if (data.reply) {
+      const plainText = cleanMarkdown(data.reply);
       appendMessage(plainText, "bot");
     } else {
-      appendMessage("❌ Failed to get response.", "bot");
+      appendMessage("❌ Sorry, I couldn't generate a response.", "bot");
     }
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching Gemini response:", err);
     removeTyping();
     appendMessage("❌ Failed to reach server. Try again.", "bot");
   }
 }
 
-// Enter key triggers send
-userInput.addEventListener("keypress", function(e) {
-  if (e.key === "Enter") sendMessage();
+// Send on Enter key
+userInput.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
 });
 
 // Clean markdown symbols
@@ -108,7 +110,7 @@ function cleanMarkdown(md) {
   return text.trim();
 }
 
-// Optional: add toggle for mobile menu if you have that in header
+// Optional: mobile toggle (if you use it)
 const menuToggle = document.getElementById("menu-toggle");
 const mobileMenu = document.getElementById("mobile-menu");
 if (menuToggle && mobileMenu) {

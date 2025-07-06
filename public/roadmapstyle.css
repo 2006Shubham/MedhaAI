@@ -1,6 +1,7 @@
+/* Base page setup */
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: radial-gradient(circle at top left, #f0f4ff, #e6f7ff);
+  background: linear-gradient(135deg, #eef2f3, #dff6ff);
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -8,41 +9,57 @@ body {
   padding: 50px 20px;
 }
 
+/* Card container */
 .container {
-  background: #fff;
+  background: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  padding: 2rem 2rem 3rem;
-  max-width: 600px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  padding: 2.5rem 2rem 3rem;
+  max-width: 640px;
   width: 100%;
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 h1 {
-  font-size: 1.8rem;
-  color: #5a3ff2;
+  font-size: 2rem;
+  color: #473bf0;
   font-weight: 800;
   margin-bottom: 2rem;
 }
 
 input[type="file"] {
   display: block;
-  margin: 1rem auto;
+  margin: 1rem auto 2rem;
 }
 
+.info {
+  margin-top: 1rem;
+  color: #444;
+  font-weight: 500;
+}
+
+/* Buttons */
 button {
-  background: #5a3ff2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #473bf0;
   color: #fff;
   border: none;
-  border-radius: 9999px;
-  padding: 12px 30px;
+  border-radius: 50px;
+  padding: 0.8rem 1.8rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  gap: 0.5rem;
   transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(71, 59, 240, 0.2);
 }
 
 button:hover {
-  background: #3d29c8;
+  background: #3220b7;
+  box-shadow: 0 12px 24px rgba(71, 59, 240, 0.3);
 }
 
 button:disabled {
@@ -50,31 +67,41 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.info {
-  margin-top: 1rem;
-  color: #333;
+button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Layout for nav buttons */
+.mcq-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 2rem;
 }
 
 .hidden {
   display: none;
 }
 
+/* Score styling */
 #scoreDisplay {
   font-weight: bold;
-  margin-bottom: 1rem;
-  color: #5a3ff2;
+  margin-bottom: 1.2rem;
+  color: #473bf0;
 }
 
+/* MCQ card */
 #mcqContainer {
   background: #f9f9ff;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
 }
 
 .question {
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 1rem;
 }
 
@@ -91,10 +118,11 @@ button:disabled {
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 
 .option:hover {
-  border-color: #5a3ff2;
+  border-color: #473bf0;
 }
 
 .option.correct {
@@ -107,26 +135,14 @@ button:disabled {
   background: #ffebee;
 }
 
-/* ✅ Controls container for buttons */
-.mcq-controls {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.mcq-controls button {
-  flex: 1 1 auto;
-  min-width: 100px;
-}
-
+/* Prettier loader */
 .loader {
   width: 60px;
   height: 60px;
   border: 6px solid #ddd;
-  border-top: 6px solid #5a3ff2;
+  border-top: 6px solid #473bf0;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite, colorShift 4s ease-in-out infinite alternate;
   margin: 2rem auto;
 }
 
@@ -134,8 +150,19 @@ button:disabled {
   to { transform: rotate(360deg); }
 }
 
+@keyframes colorShift {
+  0% { border-top-color: #473bf0; }
+  50% { border-top-color: #ff6ec7; }
+  100% { border-top-color: #5ee4c2; }
+}
+
 .loading-text {
   color: #555;
   font-weight: 600;
   margin-top: 1rem;
+}
+
+/* Reset button at bottom */
+#resetBtn {
+  margin-top: 2rem;
 }

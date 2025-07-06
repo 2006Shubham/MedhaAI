@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>MedhaAi — Gemini MCQ Generator</title>
-  <link rel="stylesheet" href="roadmapstyle.css">
+  <link rel="stylesheet" href="roadmapstyle.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
 </head>
 <body>
   <div class="container">
@@ -11,16 +13,16 @@
 
     <!-- Upload Section -->
     <div id="uploadSection">
-      <p>Upload a PDF, PPT, DOC, or TXT file to generate MCQs.</p>
-      <input type="file" id="documentUpload" accept=".pdf,.ppt,.pptx,.doc,.docx,.txt">
-      <button id="generateMcqsBtn">Generate MCQs</button>
+      <p>Upload a PDF, DOCX or TXT file to generate MCQs:</p>
+      <input type="file" id="documentUpload" accept=".pdf,.doc,.docx,.txt" />
+      <button id="generateMcqsBtn" disabled>Generate MCQs</button>
       <div id="message" class="info"></div>
     </div>
 
-    <!-- Loading Animation -->
+    <!-- Loading Section -->
     <div id="loadingSection" class="hidden">
       <div class="loader"></div>
-      <p class="loading-text">Generating your personalized MCQs...</p>
+      <p class="loading-text">Preparing your questions...</p>
     </div>
 
     <!-- MCQ Section -->
@@ -28,8 +30,13 @@
       <div id="scoreDisplay">Score: 0</div>
       <div id="mcqContainer"></div>
       <div class="mcq-controls">
-        <button id="prevBtn">Previous</button>
-        <button id="nextBtn">Next</button>
+        <button id="prevBtn">
+  <i class="fa fa-arrow-left"></i> Back
+</button>
+
+
+        <button id="nextBtn" ><i class="fa fa-arrow-right"></i> Back
+</button>
       </div>
       <button id="resetBtn" class="hidden">Start Over</button>
     </div>
