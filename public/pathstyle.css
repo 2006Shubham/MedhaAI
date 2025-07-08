@@ -1,4 +1,6 @@
-/* Base */
+/* -----------------------------------
+   ✅ Base Styles
+----------------------------------- */
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: #f0f4ff;
@@ -6,7 +8,17 @@ body {
   padding: 0;
 }
 
-/* Header */
+a {
+  text-decoration: none;
+}
+
+.hidden {
+  display: none;
+}
+
+/* -----------------------------------
+   ✅ Header & Navigation
+----------------------------------- */
 .header {
   display: flex;
   justify-content: space-between;
@@ -16,7 +28,7 @@ body {
   padding: 12px 30px;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .logo {
@@ -31,7 +43,6 @@ body {
 }
 
 .nav a {
-  text-decoration: none;
   color: #333;
   font-weight: 500;
 }
@@ -44,7 +55,7 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .menu-toggle {
@@ -56,7 +67,7 @@ body {
 }
 
 .mobile-menu {
-  display: flex;
+  display: none;
   flex-direction: column;
   background: #fff;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -68,8 +79,7 @@ body {
 }
 
 .mobile-menu a {
-  margin: 5px 0;
-  text-decoration: none;
+  margin: 8px 0;
   color: #333;
   font-weight: 500;
 }
@@ -78,20 +88,17 @@ body {
   color: #5a3ff2;
 }
 
-.hidden {
-  display: none;
-}
-
-/* Container */
+/* -----------------------------------
+   ✅ Main Container
+----------------------------------- */
 .container {
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  max-width: 900px;
+  max-width: 1100px;
   margin: 50px auto 95px auto;
   padding: 3rem 2rem;
   text-align: center;
-  flex: 1;
 }
 
 .container p {
@@ -118,6 +125,9 @@ button:hover {
   background: #3d29c8;
 }
 
+/* -----------------------------------
+   ✅ Loader
+----------------------------------- */
 .loader {
   border: 6px solid #ddd;
   border-top: 6px solid #5a3ff2;
@@ -132,128 +142,9 @@ button:hover {
   to { transform: rotate(360deg); }
 }
 
-/* ✅ MCQ Section — Pro design */
-#mcqSection {
-  background: #fff;
-  border-radius: 1rem;
-  padding: 3rem 2rem;
-  margin: 2rem auto;
-  max-width: 900px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
-  text-align: center;
-}
-
-#mcqSection h2 {
-  margin-bottom: 2rem;
-  color: #222;
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-#mcqContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.question {
-  font-weight: 600;
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
-
-.options-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  justify-content: center;
-}
-
-.option {
-  display: flex;
-  align-items: center;
-  border: 2px solid #e0e7ff;
-  border-radius: 0.75rem;
-  padding: 1rem 1.25rem;
-  background: #fafaff;
-  cursor: pointer;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-}
-
-.option:hover {
-  border-color: #5a3ff2;
-  box-shadow: 0 8px 20px rgba(90,63,242,0.1);
-  transform: translateY(-3px);
-}
-
-/* ✅ Roadmap Path */
-#cardsContainer {
-  position: relative;
-  margin: 2rem auto;
-  padding-left: 40px;
-  max-width: 800px;
-  text-align: left;
-}
-
-#cardsContainer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 20px;
-  width: 4px;
-  height: 100%;
-  background: #5a3ff2;
-}
-
-.card {
-  position: relative;
-  background: #fff;
-  border: 2px solid #ddd;
-  border-radius: 1rem;
-  padding: 1.5rem 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  left: -28px;
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  border: 4px solid #5a3ff2;
-  border-radius: 50%;
-  z-index: 1;
-}
-
-.card.locked::before {
-  background: #ddd;
-  border-color: #aaa;
-}
-
-.card.locked {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.card.unlocked {
-  opacity: 1;
-}
-
-.card p {
-  text-align: justify;
-}
-
-.card .resources a {
-  display: inline-block;
-  margin-top: 10px;
-  color: #5a3ff2;
-  text-decoration: underline;
-}
-
+/* -----------------------------------
+   ✅ Progress Bar
+----------------------------------- */
 .progress-bar {
   background: #ddd;
   height: 10px;
@@ -269,7 +160,182 @@ button:hover {
   transition: 0.3s ease;
 }
 
-/* Footer */
+/* -----------------------------------
+   ✅ MCQ Section
+----------------------------------- */
+#mcqSection {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+#mcqSection h2 {
+  margin-bottom: 1.5rem;
+  color: #222;
+  font-size: 1.8rem;
+}
+
+#mcqContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.question {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.option {
+  background: #fafaff;
+  border: 2px solid #ddd;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option:hover {
+  border-color: #5a3ff2;
+  box-shadow: 0 8px 20px rgba(90,63,242,0.1);
+}
+
+/* -----------------------------------
+   ✅ Roadmap Tree + Branch Cards
+----------------------------------- */
+.roadmap-tree {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin: 3rem auto;
+}
+
+.tree-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tree-branch::before {
+  content: "";
+  height: 40px;
+  width: 2px;
+  background: #5a3ff2;
+}
+
+.tree-card {
+  position: relative;
+  background: #fff;
+  border: 2px solid #5a3ff2;
+  border-radius: 1rem;
+  padding: 1rem 1.5rem 1rem 3rem;
+  min-width: 200px;
+  text-align: left;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tree-card:hover {
+  transform: translateY(-5px);
+}
+
+.step-number {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #5a3ff2;
+  color: #fff;
+  border-radius: 50%;
+  width: 1.8rem;
+  height: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+
+
+
+/* -----------------------------------
+   ✅ Side Panel
+----------------------------------- */
+#sidePanel {
+  position: fixed;
+  top: 70px; /* below header */
+  bottom: 0;
+  right: -400px;
+  width: 350px;
+  max-width: 95%;
+  background: #fff;
+  box-shadow: -4px 0 30px rgba(0,0,0,0.2);
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+  z-index: 500; /* stay above content */
+  border-left: 5px solid #5a3ff2;
+}
+
+#sidePanel.open {
+  right: 0;
+}
+
+
+#closePanel {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+#sidePanel h3 {
+  margin-top: 2rem;
+  color: #5a3ff2;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+#sidePanel p {
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+#sidePanel a {
+  display: block;
+  background: #f9f9ff;
+  padding: 0.5rem 0.75rem;
+  margin: 0.4rem 0;
+  border-radius: 0.5rem;
+  color: #5a3ff2;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+#sidePanel a:hover {
+  background: #eef;
+}
+
+
+/* -----------------------------------
+   ✅ Footer
+----------------------------------- */
 .footer {
   background: #5a3ff2;
   color: #fff;
@@ -278,16 +344,62 @@ button:hover {
   font-size: 0.9rem;
 }
 
-/* Responsive */
+/* -----------------------------------
+   ✅ Responsive Design
+----------------------------------- */
+@media (max-width: 1024px) {
+  .container {
+    padding: 2rem 1rem;
+  }
+
+  #sidePanel {
+    width: 100%;
+    right: -100%;
+  }
+
+  #sidePanel.open {
+    right: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .nav {
     display: none;
   }
+
   .menu-toggle {
     display: block;
     color: #5a3ff2;
   }
+
+  .mobile-menu {
+    display: flex;
+  }
+
   .lang-select {
     display: none;
+  }
+
+  .roadmap-tree {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tree-card {
+    min-width: 90%;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  #mcqSection {
+    padding: 1rem;
   }
 }

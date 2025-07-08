@@ -32,7 +32,7 @@
     </nav>
 
     <div class="lang-select">
-      <span>🌐 Select Language:</span>
+      <span>🌐 Language:</span>
       <div id="google_translate_element"></div>
     </div>
 
@@ -51,7 +51,7 @@
   <div class="container">
     <h1>✨ Build Your Personalized Learning Path</h1>
 
-    <!-- Upload Section -->
+    <!-- Upload -->
     <div id="uploadSection">
       <p>Upload your study material (PDF, DOCX, PPT, TXT)</p>
       <input type="file" id="documentUpload" accept=".pdf,.ppt,.pptx,.doc,.docx,.txt" />
@@ -59,26 +59,36 @@
       <p id="message" class="info"></p>
     </div>
 
-    <!-- Loader Section -->
+    <!-- Loader -->
     <div id="loaderSection" class="hidden">
       <div class="loader"></div>
       <p class="loading-text">🔍 Preparing your quick questions...</p>
     </div>
 
-    <!-- MCQ Section (Dynamic) -->
+    <!-- ✅ MCQ Section -->
     <div id="mcqSection" class="hidden">
       <h2>Quick 5 Questions</h2>
       <div id="mcqContainer"></div>
     </div>
 
-    <!-- Roadmap Section -->
+    <!-- ✅ Roadmap Tree -->
     <div id="roadmapSection" class="hidden">
       <h2>Your Personalized Roadmap</h2>
-      <div id="cardsContainer"></div>
+      <div class="roadmap-tree" id="treeContainer"></div>
+
+      <div id="sidePanel" class="side-panel">
+        <button id="closePanel">&times;</button>
+        <h3 id="panelTitle"></h3>
+        <p id="panelDescription"></p>
+        <p id="panelDetails"></p>
+        <div id="panelResources"></div>
+      </div>
+
       <div class="progress-bar">
         <div id="progressFill"></div>
       </div>
     </div>
+
   </div>
 
   <!-- ✅ Footer -->
@@ -87,11 +97,58 @@
   </footer>
 
   <script src="js/path.js"></script>
+
   <script>
-    document.getElementById('menu-toggle').addEventListener('click', function() {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
+  // ✅ Mobile menu toggle
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  });
+
+  // ✅ Pro renderCards with click-outside drawer logic
+  window.renderCards = function (roadmap) {
+    const treeContainer = document.getElementById('treeContainer');
+    const sidePanel = document.getElementById('sidePanel');
+    const panelTitle = document.getElementById('panelTitle');
+    const panelDescription = document.getElementById('panelDescription');
+    const panelDetails = document.getElementById('panelDetails');
+    const panelResources = document.getElementById('panelResources');
+    const closePanel = document.getElementById('closePanel');
+
+    // Clear old
+    treeContainer.innerHTML = '';
+
+    // Render each step
+    roadmap.forEach((step, index) => {
+      const card = document.createElement('div');
+      card.className = 'tree-card';
+      card.innerHTML = `
+        <div class="step-number">${index + 1}</div>
+        <h4>${step.title}</h4>
+      `;
+
+      card.onclick = (e) => {
+        e.stopPropagation();
+        panelTitle.textContent = step.title;
+        panelDescription.textContent = step.description;
+        panelDetails.textContent = step.details;
+        panelResources.innerHTML = step.resources?.length
+          ? step.resources.map(link => `<a href="${link}" target="_blank">🔗 ${link}</a>`).join('')
+          : 'No resources.';
+        sidePanel.classList.add('open');
+      };
+
+      treeContainer.appendChild(card);
     });
-  </script>
+
+    closePanel.onclick = () => sidePanel.classList.remove('open');
+
+    document.addEventListener('click', function (e) {
+      if (!sidePanel.contains(e.target) && !e.target.classList.contains('tree-card')) {
+        sidePanel.classList.remove('open');
+      }
+    });
+  };
+</script>
 
 </body>
 </html>
