@@ -5,7 +5,6 @@
   <title>MedhaAi — Gemini MCQ Generator</title>
   <link rel="stylesheet" href="roadmapstyle.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
 </head>
 <body>
   <div class="container">
@@ -28,15 +27,18 @@
     <!-- MCQ Section -->
     <div id="mcqSection" class="hidden">
       <div id="scoreDisplay">Score: 0</div>
-      <div id="mcqContainer"></div>
+      <div id="mcqContainer">
+        <div class="question">What is the full form of HTML?</div>
+        <div class="options-grid">
+          <div class="option">A. Hyper Text Markup Language</div>
+          <div class="option">B. Home Tool Markup Language</div>
+          <div class="option">C. Hyperlinks and Text Markup Language</div>
+          <div class="option">D. Hyper Tool Mark Language</div>
+        </div>
+      </div>
       <div class="mcq-controls">
-        <button id="prevBtn">
-  <i class="fa fa-arrow-left"></i> Back
-</button>
-
-
-        <button id="nextBtn" ><i class="fa fa-arrow-right"></i> Back
-</button>
+        <button id="prevBtn"><i class="fa fa-arrow-left"></i> Back</button>
+        <button id="nextBtn">Next <i class="fa fa-arrow-right"></i></button>
       </div>
       <button id="resetBtn" class="hidden">Start Over</button>
     </div>

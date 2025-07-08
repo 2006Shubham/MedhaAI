@@ -4,11 +4,54 @@
   <meta charset="UTF-8" />
   <title>MedhaAi — Personalized Roadmap</title>
   <link rel="stylesheet" href="pathstyle.css" />
+
+  <!-- Google Translate -->
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,mr,ta,te,kn,gu,bn',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
+
+  <!-- ✅ Header -->
+  <header class="header">
+    <h1 class="logo">MedhaAi</h1>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="path.html">Roadmap</a>
+      <a href="chatbot.html">Chatbot</a>
+      <a href="roadmap.html">Interactive Learning</a>
+      <a href="news.html">News</a>
+      <a href="auth.html">Join Us</a>
+    </nav>
+
+    <div class="lang-select">
+      <span>🌐 Select Language:</span>
+      <div id="google_translate_element"></div>
+    </div>
+
+    <button id="menu-toggle" class="menu-toggle">☰</button>
+    <div id="mobile-menu" class="mobile-menu hidden">
+      <a href="index.html">Home</a>
+      <a href="path.html">Roadmap</a>
+      <a href="chatbot.html">Chatbot</a>
+      <a href="roadmap.html">Interactive Learning</a>
+      <a href="news.html">News</a>
+      <a href="auth.html">Join Us</a>
+    </div>
+  </header>
+
+  <!-- ✅ Main Content -->
   <div class="container">
     <h1>✨ Build Your Personalized Learning Path</h1>
 
+    <!-- Upload Section -->
     <div id="uploadSection">
       <p>Upload your study material (PDF, DOCX, PPT, TXT)</p>
       <input type="file" id="documentUpload" accept=".pdf,.ppt,.pptx,.doc,.docx,.txt" />
@@ -16,28 +59,39 @@
       <p id="message" class="info"></p>
     </div>
 
+    <!-- Loader Section -->
     <div id="loaderSection" class="hidden">
       <div class="loader"></div>
       <p class="loading-text">🔍 Preparing your quick questions...</p>
     </div>
 
+    <!-- MCQ Section (Dynamic) -->
     <div id="mcqSection" class="hidden">
       <h2>Quick 5 Questions</h2>
       <div id="mcqContainer"></div>
     </div>
 
+    <!-- Roadmap Section -->
     <div id="roadmapSection" class="hidden">
       <h2>Your Personalized Roadmap</h2>
       <div id="cardsContainer"></div>
-      <div class="progress-bar"><div id="progressFill"></div></div>
-      <div class="cta-buttons">
-        <button id="toMcqBtn">More MCQs</button>
-        <button id="toLearningBtn">Interactive Learning</button>
-        <button id="returnBtn">Return</button>
+      <div class="progress-bar">
+        <div id="progressFill"></div>
       </div>
     </div>
   </div>
 
+  <!-- ✅ Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 MedhaAi. All rights reserved.</p>
+  </footer>
+
   <script src="js/path.js"></script>
+  <script>
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+
 </body>
 </html>

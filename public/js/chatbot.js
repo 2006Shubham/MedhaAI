@@ -118,3 +118,18 @@ if (menuToggle && mobileMenu) {
     mobileMenu.classList.toggle("hidden");
   });
 }
+// Example:
+const output = document.getElementById('resultOutput');
+
+// User message:
+const user = document.createElement('div');
+user.className = 'message user';
+user.innerHTML = `<div class="bubble">Hello there</div><div class="avatar user">U</div>`;
+output.appendChild(user);
+
+// AI message:
+const ai = document.createElement('div');
+ai.className = 'message ai';
+ai.innerHTML = `<div class="avatar">A</div><div class="bubble">Hi! How can I help?</div>`;
+output.appendChild(ai);
+

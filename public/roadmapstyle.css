@@ -13,7 +13,7 @@ body {
 .container {
   background: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   padding: 2.5rem 2rem 3rem;
   max-width: 640px;
   width: 100%;
@@ -67,12 +67,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-button svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-/* Layout for nav buttons */
 .mcq-controls {
   display: flex;
   justify-content: center;
@@ -89,14 +83,16 @@ button svg {
   font-weight: bold;
   margin-bottom: 1.2rem;
   color: #473bf0;
+  font-size: 1rem;
 }
 
-/* MCQ card */
+/* MCQ card area */
 #mcqContainer {
   background: #f9f9ff;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  text-align: left;
 }
 
 .question {
@@ -107,22 +103,24 @@ button svg {
 
 .options-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
 }
 
 .option {
   padding: 1rem;
-  background: #fff;
+  background: #ffffff;
   border: 2px solid #ddd;
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  font-weight: 500;
 }
 
 .option:hover {
   border-color: #473bf0;
+  background: #f3f4ff;
 }
 
 .option.correct {
@@ -135,7 +133,7 @@ button svg {
   background: #ffebee;
 }
 
-/* Prettier loader */
+/* Loader */
 .loader {
   width: 60px;
   height: 60px;
@@ -147,13 +145,21 @@ button svg {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes colorShift {
-  0% { border-top-color: #473bf0; }
-  50% { border-top-color: #ff6ec7; }
-  100% { border-top-color: #5ee4c2; }
+  0% {
+    border-top-color: #473bf0;
+  }
+  50% {
+    border-top-color: #ff6ec7;
+  }
+  100% {
+    border-top-color: #5ee4c2;
+  }
 }
 
 .loading-text {
@@ -162,7 +168,6 @@ button svg {
   margin-top: 1rem;
 }
 
-/* Reset button at bottom */
 #resetBtn {
   margin-top: 2rem;
 }

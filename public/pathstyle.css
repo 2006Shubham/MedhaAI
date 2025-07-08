@@ -1,19 +1,101 @@
+/* Base */
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: #f0f4ff;
-  display: flex;
-  justify-content: center;
-  padding: 40px;
+  margin: 0;
+  padding: 0;
 }
 
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 12px 30px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #5a3ff2;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  color: #5a3ff2;
+}
+
+.lang-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: absolute;
+  top: 60px;
+  right: 30px;
+  width: 200px;
+  padding: 20px;
+}
+
+.mobile-menu a {
+  margin: 5px 0;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.mobile-menu a:hover {
+  color: #5a3ff2;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Container */
 .container {
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  max-width: 600px;
-  width: 100%;
-  padding: 2rem;
+  max-width: 900px;
+  margin: 50px auto 95px auto;
+  padding: 3rem 2rem;
   text-align: center;
+  flex: 1;
+}
+
+.container p {
+  text-align: justify;
 }
 
 input[type="file"] {
@@ -36,10 +118,6 @@ button:hover {
   background: #3d29c8;
 }
 
-.hidden {
-  display: none;
-}
-
 .loader {
   border: 6px solid #ddd;
   border-top: 6px solid #5a3ff2;
@@ -50,23 +128,131 @@ button:hover {
   margin: 2rem auto;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ✅ MCQ Section — Pro design */
+#mcqSection {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+#mcqSection h2 {
+  margin-bottom: 2rem;
+  color: #222;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+#mcqContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.question {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
 
 .options-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  justify-content: center;
 }
 
 .option {
-  border: 2px solid #ddd;
+  display: flex;
+  align-items: center;
+  border: 2px solid #e0e7ff;
   border-radius: 0.75rem;
-  padding: 1rem;
+  padding: 1rem 1.25rem;
+  background: #fafaff;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
 }
 
-.option:hover { border-color: #5a3ff2; }
+.option:hover {
+  border-color: #5a3ff2;
+  box-shadow: 0 8px 20px rgba(90,63,242,0.1);
+  transform: translateY(-3px);
+}
+
+/* ✅ Roadmap Path */
+#cardsContainer {
+  position: relative;
+  margin: 2rem auto;
+  padding-left: 40px;
+  max-width: 800px;
+  text-align: left;
+}
+
+#cardsContainer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 4px;
+  height: 100%;
+  background: #5a3ff2;
+}
+
+.card {
+  position: relative;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 1rem;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -28px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border: 4px solid #5a3ff2;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.card.locked::before {
+  background: #ddd;
+  border-color: #aaa;
+}
+
+.card.locked {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.card.unlocked {
+  opacity: 1;
+}
+
+.card p {
+  text-align: justify;
+}
+
+.card .resources a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #5a3ff2;
+  text-decoration: underline;
+}
 
 .progress-bar {
   background: #ddd;
@@ -83,17 +269,25 @@ button:hover {
   transition: 0.3s ease;
 }
 
-.card {
-  background: #fff;
-  border: 2px solid #ddd;
-  border-radius: 1rem;
-  padding: 1rem;
-  margin: 1rem 0;
+/* Footer */
+.footer {
+  background: #5a3ff2;
+  color: #fff;
+  text-align: center;
+  padding: 16px;
+  font-size: 0.9rem;
 }
 
-.card.locked { opacity: 0.5; pointer-events: none; }
-.card.unlocked { opacity: 1; }
-
-.cta-buttons button {
-  margin: 10px;
+/* Responsive */
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+  .menu-toggle {
+    display: block;
+    color: #5a3ff2;
+  }
+  .lang-select {
+    display: none;
+  }
 }

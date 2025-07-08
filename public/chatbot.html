@@ -1,22 +1,86 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gemini AI Chat</title>
   <link rel="stylesheet" href="chatbotstyle.css">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+  <!-- Google Translate -->
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,mr,ta,te,kn,gu,bn',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <style>
+    .goog-te-banner-frame.skiptranslate { display: none !important; }
+    body { top: 0px !important; }
+    .goog-logo-link, .goog-te-gadget span { display: none !important; }
+    .goog-te-gadget { color: transparent !important; }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Ask Gemini Anything!</h1>
+
+  <!-- ✅ Header with toggle -->
+  <header class="header">
+    <h1 class="logo">MedhaAi</h1>
+    <button id="menu-toggle" class="menu-toggle">&#9776;</button>
+    <nav class="nav" id="nav-menu">
+      <a href="index.html">Home</a>
+      <a href="path.html">Roadmap</a>
+      <a href="chatbot.html">Chatbot</a>
+      <a href="roadmap.html">Interactive Learning</a>
+      <a href="news.html">News</a>
+      <a href="auth.html">Join Us</a>
+    </nav>
+    <div class="lang-select">
+      <span>🌐</span>
+      <div id="google_translate_element"></div>
+    </div>
+  </header>
+  <div class="brand-intro">
+  <h1 class="brand-title">MedhaAI</h1>
+  <lottie-player src="res/ai_animation.json"
+    background="transparent"
+    speed="1"
+    style="width: 100px; height: 100px;"
+    loop autoplay></lottie-player>
+</div>
+  <!-- ✅ Chat area -->
+  <main class="chat-container">
     <div id="resultContainer">
-      <p><strong>Gemini's Response:</strong></p>
-      <div id="resultOutput"></div>
+      <div id="resultOutput">
+        <!-- Messages will appear here -->
+      </div>
     </div>
     <div id="input">
-      <textarea id="promptInput" placeholder="Type your question or command here..."></textarea>
+      <textarea id="promptInput" placeholder="Ask MedhaAi..."></textarea>
       <button id="generateBtn">Send</button>
     </div>
-  </div>
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 MedhaAi. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Nav toggle
+    const toggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('nav-menu');
+    toggle.addEventListener('click', () => nav.classList.toggle('show'));
+  </script>
+  
+</script>
+
+
   <script src="js/script2.js"></script>
 </body>
 </html>
