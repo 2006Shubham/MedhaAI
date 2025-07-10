@@ -5,8 +5,50 @@
   <title>MedhaAi — Gemini MCQ Generator</title>
   <link rel="stylesheet" href="roadmapstyle.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Google Translate -->
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,mr,ta,te,kn,gu,bn',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
+
+  <!-- ✅ Header (Copied from roadmap) -->
+  <header class="header">
+    <h1 class="logo">MedhaAi</h1>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="path.html">Roadmap</a>
+      <a href="chatbot.html">Chatbot</a>
+      <a href="roadmap.html">Interactive Learning</a>
+      <a href="news.html">News</a>
+      <a href="auth.html">Join Us</a>
+    </nav>
+
+    <div class="lang-select">
+      <span>🌐 Language:</span>
+      <div id="google_translate_element"></div>
+    </div>
+
+    <button id="menu-toggle" class="menu-toggle">☰</button>
+    <div id="mobile-menu" class="mobile-menu hidden">
+      <a href="index.html">Home</a>
+      <a href="path.html">Roadmap</a>
+      <a href="chatbot.html">Chatbot</a>
+      <a href="roadmap.html">Interactive Learning</a>
+      <a href="news.html">News</a>
+      <a href="auth.html">Join Us</a>
+    </div>
+  </header>
+
+  <!-- ✅ Main Content -->
   <div class="container">
     <h1>MedhaAi — Gemini MCQ Generator</h1>
 
@@ -43,6 +85,18 @@
       <button id="resetBtn" class="hidden">Start Over</button>
     </div>
   </div>
+
+  <!-- ✅ Footer (Copied from roadmap) -->
+  <footer class="footer">
+    <p>&copy; 2025 MedhaAi. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
 
   <script src="js/roadmap.js"></script>
 </body>
