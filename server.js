@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(); // Ensure this is at the TOP
 const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');

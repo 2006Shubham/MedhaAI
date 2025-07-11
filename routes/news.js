@@ -1,40 +1,27 @@
+// routes/news.js
 const express = require('express');
-const fetch = require('node-fetch');
 const router = express.Router();
+const fetch = require('node-fetch'); // Correctly import node-fetch
 
-const NEWS_API_KEY = process.env.NEWS_API_KEY;
-
+// News API endpoint
 router.get('/', async (req, res) => {
-  // ✅ Default: India national headlines
-  const country = 'in';
-  const topic = req.query.q; // Optional: can use q for category if needed
+  const NEWS_API_KEY = process.env.NEWS_API_KEY; // Get API key from environment variables
+  const NEWS_URL = `https://newsapi.org/v2/everything?q=india&language=en&apiKey=${NEWS_API_KEY}`;
 
   if (!NEWS_API_KEY) {
-    console.error("❌ API key missing in .env");
-    return res.status(500).json({ error: "API key missing" });
+    return res.status(500).json({ error: 'News API key not configured on the server.' });
   }
 
-  // ✅ Proper `top-headlines` URL
-  const url = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${NEWS_API_KEY}`;
-
-  console.log("✅ Final URL:", url);
-
   try {
-    const response = await fetch(url);
-    console.log("🔍 Fetch response status:", response.status);
-
-    const data = await response.json();
-    console.log("✅ NewsAPI raw response:", data);
-
-    if (data.status !== 'ok') {
-      console.error("❌ NewsAPI responded with error:", data);
-      return res.status(500).json({ error: "NewsAPI returned error", info: data });
+    const response = await fetch(NEWS_URL); // Use the imported fetch
+    if (!response.ok) {
+        throw new Error(`News API returned status ${response.status}`);
     }
-
+    const data = await response.json();
     res.json(data);
-  } catch (err) {
-    console.error("❌ Error fetching news:", err.message);
-    res.status(500).json({ error: "Failed to fetch news" });
+  } catch (error) {
+    console.error("Error fetching news from external API:", error);
+    res.status(500).json({ error: 'Failed to fetch news from external API.' });
   }
 });
 
