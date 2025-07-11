@@ -4,17 +4,45 @@
   <meta charset="UTF-8" />
   <title>SmartNews Reader</title>
   <link rel="stylesheet" href="newstyle.css" />
+
+  <!-- Google Translate Script -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+      );
+    }
+  </script>
 </head>
+
 <body>
   <nav>
-    <h1>📰 SmartNews Reader</h1>
-  </nav>
+  <h1>📰 SmartNews Reader</h1>
+  <div class="translate-wrapper">
+    <label>Select Language:</label>
+    <div id="google_translate_element"></div>
+  </div>
+</nav>
 
   <section id="news-section">
     <h2>Top Headlines</h2>
-    <div id="news-container"></div>
+    <div id="news-container">
+      <!-- Example News Card -->
+      <div class="news-card">
+        <img src="https://via.placeholder.com/600x300" alt="Headline image" />
+        <div class="news-card-content">
+          <h3>Sample Headline</h3>
+          <p>This is a short description of the news article to grab user attention and encourage them to read more.</p>
+          <a href="#" class="read-btn">Read More</a>
+        </div>
+      </div>
+
+      <!-- Add more news-card divs dynamically or statically -->
+    </div>
   </section>
 
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script src="js/newsscript.js"></script>
 </body>
 </html>

@@ -1,0 +1,191 @@
+/* 🌟 Base Layout */
+body {
+  background: #f5f7fa;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 50px 20px;
+  color: #333;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 700px;
+  background: #fff;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #ff0044;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+/* 🌟 Search Bar */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap; /* Better: keep on one line if possible */
+  margin-bottom: 2rem; /* Add spacing below instead of on button */
+}
+
+
+.search-bar input {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+}
+
+.search-bar input:focus {
+  border-color: #ff0044;
+  outline: none;
+}
+
+.search-bar button {
+  padding: 1rem 1.5rem;
+  background: #ff0044;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  /* ❌ Remove margin-bottom: 30px; */
+}
+
+
+.search-bar button:hover {
+  background: #d9003c;
+  box-shadow: 0 0 12px #ff0044;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+
+/* 🌟 Card with Spark Border */
+/* General card style */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Soft border-glow on hover */
+.card:hover {
+  box-shadow: 0 10px 30px rgba(255, 0, 68, 0.15);
+  border-color: #ff0044;
+}
+
+/* Card heading */
+.card h3 {
+  color: #ff0044;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+/* Card text */
+.card p {
+  margin: 0.5rem 0;
+  color: #444;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* Emphasized labels */
+.card p strong {
+  color: #111;
+}
+
+/* Download link */
+.card a {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #00b386;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.card a:hover {
+  color: #008060;
+  text-decoration: underline;
+}
+/* read more button : */
+/* Stylish Read Full Post button */
+.read-btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: #ff0044;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  line-height: 1; /* ✅ Fix vertical alignment */
+}
+
+/* Hover effect */
+.read-btn:hover {
+  background: #d9003c;
+  box-shadow: 0 0 15px rgba(255, 0, 68, 0.4);
+  padding-right: 2.8rem; /* space for arrow */
+}
+
+/* Add slide-in arrow on hover */
+.read-btn::after {
+  content: "→";
+  vertical-align: center;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%) translateX(20px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.read-btn:hover::after {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+}
+
+
+
+/* 🌟 Responsive */
+@media (max-width: 600px) {
+  .search-bar {
+    flex-direction: column;
+  }
+  .search-bar button {
+    width: 100%;
+  }
+}
