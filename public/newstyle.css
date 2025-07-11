@@ -49,20 +49,3 @@ a {
   text-decoration: none;
   color: #007BFF;
 }
-
-
-/* Hide Google Translate top banner */
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-body {
-  top: 0px !important;
-}
-
-/* Optional: Hide Google branding if you want */
-.goog-logo-link, .goog-te-gadget span {
-  display: none !important;
-}
-.goog-te-gadget {
-  color: transparent !important;
-}

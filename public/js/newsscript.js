@@ -1,13 +1,15 @@
-const NEWS_URL = '/api/news?q=india'; // Backend se aa raha, API key hidden
+// public/app.js
+// Removed API_KEY directly from here
+const NEWS_URL_PROXY = '/api/news'; // Endpoint on your Node.js server
 
 window.onload = () => {
-  fetch(NEWS_URL)
+  fetch(NEWS_URL_PROXY) // Call your server's proxy
     .then(res => res.json())
     .then(data => {
-      if (data.articles && data.articles.length > 0) {
+      if (data.articles && data.articles.length > 0) { // Check for data.articles
         displayNews(data.articles);
       } else {
-        document.getElementById('news-container').innerText = 'No news found.';
+        document.getElementById('news-container').innerText = data.error || 'No news found.'; // Handle server errors
       }
     })
     .catch(err => {
@@ -27,10 +29,13 @@ function displayNews(articles) {
     div.innerHTML = `
       <h3>${article.title}</h3>
       ${article.urlToImage ? `<img src="${article.urlToImage}" alt="news image">` : ''}
+
       <p>${article.description || 'No description available.'}</p>
-      <p>${article.content || 'No content available.'}</p>
+
+       <p>${article.content || 'No content available.'}</p>
+
       <p><strong>Published:</strong> ${new Date(article.publishedAt).toLocaleString()}</p>
-      <button class="read-btn" onclick="readText(\`${sanitize(article.title + '. ' + article.description + '. ' + article.content + '. For more information, visit the link below.')}\`)">🔊 Read</button>
+      <button class="read-btn" onclick="readText(\`${sanitize(article.title + '. ' + article.description+'. ' + article.content +".  for more information visit to link given below ")}\`)">🔊 Read</button>
       <a href="${article.url}" target="_blank">📰 Read Full Article</a>
     `;
 
@@ -38,62 +43,16 @@ function displayNews(articles) {
   });
 }
 
-let currentUtterance = null;
-let isSpeaking = false;
-
 function readText(text) {
-  // If already speaking something
-  if (isSpeaking && currentUtterance && speechSynthesis.speaking) {
-    speechSynthesis.cancel();
-    isSpeaking = false;
-    return;
-  }
-
-  // If not speaking, start reading
-  currentUtterance = new SpeechSynthesisUtterance(text);
-  currentUtterance.lang = 'en-IN';
-  currentUtterance.rate = 1;
-  currentUtterance.pitch = 1;
-
-  currentUtterance.onstart = () => {
-    isSpeaking = true;
-  };
-
-  currentUtterance.onend = () => {
-    isSpeaking = false;
-  };
-
-  speechSynthesis.speak(currentUtterance);
+  speechSynthesis.cancel(); // Stop any ongoing speech
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-IN';
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  speechSynthesis.speak(utterance);
 }
 
-
-function toggleRead(button, text) {
-  if (isSpeaking) {
-    speechSynthesis.cancel();
-    button.innerText = "🔊 Read";
-    isSpeaking = false;
-  } else {
-    currentUtterance = new SpeechSynthesisUtterance(text);
-    currentUtterance.lang = 'en-IN';
-    currentUtterance.rate = 1;
-    currentUtterance.pitch = 1;
-
-    currentUtterance.onstart = () => {
-      isSpeaking = true;
-      button.innerText = "⏹ Stop";
-    };
-
-    currentUtterance.onend = () => {
-      isSpeaking = false;
-      button.innerText = "🔊 Read";
-    };
-
-    speechSynthesis.speak(currentUtterance);
-  }
-}
-
-
-
+// Optional: sanitize to prevent issues with quotes in HTML attributes
 function sanitize(str) {
   return str.replace(/[`~"'\\]/g, '');
 }
