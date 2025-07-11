@@ -21,6 +21,10 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ✅✅✅ Added: News Router ✅✅✅
+const newsRouter = require('./routes/news');
+app.use('/api/news', newsRouter);
+
 // Upload + extract text
 app.post('/upload-and-extract-text', async (req, res) => {
   const form = new IncomingForm({
@@ -138,6 +142,7 @@ app.post('/generate-roadmap', async (req, res) => {
     res.status(500).json({ error: 'Roadmap generation failed: ' + err.message });
   }
 });
+
 // ✅ Simple Gemini Chat endpoint
 app.post('/generate-text', async (req, res) => {
   const { prompt } = req.body;
@@ -153,6 +158,5 @@ app.post('/generate-text', async (req, res) => {
     res.status(500).json({ error: 'Gemini chatbot failed' });
   }
 });
-
 
 app.listen(port, () => console.log(`✅ Server running at http://localhost:${port}`));
